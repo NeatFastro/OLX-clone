@@ -19,13 +19,13 @@ class Root extends StatefulWidget {
 class _RootState extends State<Root> {
   final Explore explore = Explore();
   final Chats chats = Chats();
-  final Sell sell = Sell();
+  // final Sell sell = Sell();
   final MyAds myAds = MyAds();
   final MyAccount myAccount = MyAccount();
 
   List<Widget> routes;
   Widget currentRoute;
-  int selectedRoute = 0;
+  int currentRouteIndex = 0;
 
   // final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -37,12 +37,11 @@ class _RootState extends State<Root> {
       explore,
       chats,
       // sell,
-      // sell,
       myAds,
       myAccount,
     ];
 
-    currentRoute = routes[selectedRoute];
+    currentRoute = routes[currentRouteIndex];
   }
 
   @override
@@ -58,7 +57,9 @@ class _RootState extends State<Root> {
         child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       // bottomNavigationBar: MyBottomNavigationBar(
+
       //   activeColor: Colors.pinkAccent.shade200,
       //   currentIndex: selectedRoute,
       //   onTap: (routeIndex) {
@@ -98,15 +99,15 @@ class _RootState extends State<Root> {
       // ),
       bottomNavigationBar: BottomAppBar(
         child: MyBottomNavigationBar(
-          activeColor: Colors.pinkAccent.shade200,
-          currentIndex: selectedRoute,
+          currentIndex: currentRouteIndex,
           onTap: (routeIndex) {
+            print('tapped index is $routeIndex');
             setState(() {
               // if (routeIndex <= 2) {
               //   routeIndex++;
               // }
-              selectedRoute = routeIndex;
-              currentRoute = routes[selectedRoute];
+              currentRouteIndex = routeIndex;
+              currentRoute = routes[currentRouteIndex];
             });
             // if (routeIndex == 3) {
             //   print('user is  null');
@@ -125,6 +126,11 @@ class _RootState extends State<Root> {
               activeIcon: Icons.chat,
               label: 'CHATS',
             ),
+            // MyBottomNavigationBarItem(
+            //   icon: Icons.chat_bubble_outline,
+            //   activeIcon: Icons.chat,
+            //   label: 'CHATS',
+            // ),
             MyBottomNavigationBarItem(
               icon: Icons.content_copy,
               activeIcon: Icons.description,

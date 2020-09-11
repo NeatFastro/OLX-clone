@@ -207,6 +207,7 @@ class FormPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: TextFormField(
+                        // maxLengthEnforced: true,
                         // autofillHints: ,
                         onChanged: (input) {
                           state.description = input;

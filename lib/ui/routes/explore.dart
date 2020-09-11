@@ -131,14 +131,12 @@ class _ExploreState extends State<Explore> {
         ),
         SliverGrid(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: kIsWeb ? 3 : 2),
+            crossAxisCount: kIsWeb ? 3 : 2,
+          ),
           delegate: SliverChildBuilderDelegate(
             (context, index) {
               final Ad ad = ads[index];
-              return ConstrainedBox(
-                constraints: BoxConstraints(minHeight: 400),
-                child: AdTile(ad: ad),
-              );
+              return AdTile(ad: ad);
             },
             childCount: ads.length,
           ),

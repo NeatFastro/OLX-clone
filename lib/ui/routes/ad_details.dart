@@ -10,14 +10,14 @@ import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/authenticationFlow.dart';
 import 'package:olx_clone/ui/routes/chat_room.dart';
 import 'package:olx_clone/ui/routes/other_user_profile.dart';
-import 'package:olx_clone/ui/routes/profile.dart';
+import 'package:olx_clone/ui/widgets/ad_tile.dart';
 import 'package:olx_clone/ui/widgets/carousel.dart';
 import 'package:olx_clone/ui/widgets/favorite_button_simple.dart';
 
 class AdDetails extends StatelessWidget {
   final Ad ad;
   // UserDoc user;
-
+  final data = DataStore();
   AdDetails({Key key, this.ad}) : super(key: key);
 
   @override
@@ -100,34 +100,23 @@ class AdDetails extends StatelessWidget {
                   final user = UserDocument.fromDocument(snapshot.data);
                   // this.user = user;
                   return ListTile(
-                    // isThreeLine: true,
+                    onTap: () => goto(context, OtherUserProfile(user)),
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
-                      child:
-                          // Image.network(snapshot.data['photoUrl'] ?? noPhotoUrl),
-                          Image.network(user.photoUrl ?? noPhotoUrl),
-                      // Image.network(noPhotoUrl),
+                      child: Image.network(user.photoUrl ?? noPhotoUrl),
                     ),
-                    // title: Text(snapshot.data['displayName']),
                     title: Text(user.displayName ?? 'wow'),
-                    // subtitle: Text(snapshot.data[]),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('member since 2020'),
-                        GestureDetector(
-                          onTap: () {
-                            // goto(context, Profile(user));
-                            goto(context, OtherUserProfile(user));
-                          },
-                          child: Text(
-                            'See profile',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                              decorationThickness: 3,
-                              // height: 2,
-                            ),
+                        Text(
+                          'See profile',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                            decorationThickness: 3,
+                            // height: 2,
                           ),
                         ),
                       ],
@@ -175,25 +164,26 @@ class AdDetails extends StatelessWidget {
               'Related Ads',
               style: textStyle,
             ),
-            SizedBox(
-              height: 200,
-              width: double.infinity,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  for (var i = 0; i < 10; i++)
-                    ColoredBox(
-                      color: Colors.accents[i],
-                      child: SizedBox(
-                        // height: 100,
-                        width: 200,
-                        child: Center(
-                          child: Text('ad #$i'),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
+            
+            FutureBuilder<List<Ad>>(
+              future: data.getRelatedAds(ad),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: Text('loading...'));
+                }
+                // return SizedBox();
+                // else
+                return SizedBox(
+                  height: 200,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        Ad ad = snapshot.data[index];
+                        return AdTile(ad: ad);
+                      }),
+                );
+              },
             ),
           ],
         ),

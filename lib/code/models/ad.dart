@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:olx_clone/code/ambience/vars.dart';
 
 class Ad {
   final String adId;
@@ -47,10 +48,11 @@ class Ad {
       description: data['description'] ?? '',
       postedBy: data['postedBy'] ?? '',
       postedAt: data['postedAt'] ?? 'unknown post date',
-      images: data['images']?? ['https://ppc.tools/wp-content/themes/ppctools/img/no-thumbnail.jpg'],
-      chats: data['chats']?? [],
+      // images: data['images']?? ['https://ppc.tools/wp-content/themes/ppctools/img/no-thumbnail.jpg'],
+      images:
+          (data['images'] as List).isEmpty ? [noTumbnailUrl] : data['images'],
+      chats: data['chats'] ?? [],
       adUploadLocation: data['adUploadLocation'] ?? GeoPoint(12, 12),
-      
     );
   }
 

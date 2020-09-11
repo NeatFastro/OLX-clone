@@ -14,6 +14,19 @@ class DataStore {
     return documents.docs.map((doc) => Ad.fromDocument(doc)).toList();
   }
 
+  Future<List<Ad>> getRelatedAds(Ad ad) async {
+    QuerySnapshot querySnapshot = await _db
+        .collection('ads')
+        .where('title', isEqualTo: ad.title)
+        .limit(5)
+        .get();
+
+        print('related cats are');
+        print(querySnapshot.docs);
+
+    return querySnapshot.docs.map((doc) => Ad.fromDocument(doc)).toList();
+  }
+
   updateOtherUserFollowersList(UserDocument otherUser) async {
     UserDocument user = await getUser(auth.currentUser.uid);
     _db.collection('users').doc(otherUser.id).update({
@@ -79,17 +92,6 @@ class DataStore {
   }
 
   Future<List<Ad>> getUserAds(String id) async {
-    // List<Ad> ads;
-    // _db
-    //     .collection('ads')
-    //     .where('postedBy', isEqualTo: id)
-    //     .get()
-    //     .then((snapshot) {
-    //   // return null;
-    //   ads = snapshot.docs.map((ad) => Ad.fromDocument(ad)).toList();
-    // });
-    // return ads;
-
     QuerySnapshot querySnapshot =
         await _db.collection('ads').where('postedBy', isEqualTo: id).get();
 

@@ -9,6 +9,7 @@ import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/authenticationFlow.dart';
 import 'package:olx_clone/ui/routes/sell.dart';
 import 'package:olx_clone/ui/widgets/ad_tile.dart';
+import 'package:olx_clone/ui/widgets/favourite_ad_tile.dart';
 
 class MyAds extends StatelessWidget {
   final repo = DataStore();
@@ -91,14 +92,6 @@ class MyAds extends StatelessWidget {
                           ],
                         );
                       }
-                      // return ListView(
-                      //   children: snapshot.data.docs.map((adDoc) {
-                      //     var ad = Ad.fromDocument(adDoc);
-                      //     return AdTile(
-                      //       ad: ad,
-                      //     );
-                      //   }).toList(),
-                      // );
 
                       return ListView(
                         children: [
@@ -117,51 +110,39 @@ class MyAds extends StatelessWidget {
                       }
                       if (!snapshot.hasData || snapshot.data == null) {
                         return Center(
-                            child: Text('you have not favored any ads'));
+                          child: Text('you have not favored any ads'),
+                        );
                       }
-                      // return ListView(
-                      //   children: snapshot.data.favoriteAds.map((adDoc) {
-                      //     var ad = Ad.fromDocument(adDoc);
-                      //     return AdTile(
-                      //       ad: ad,
-                      //     );
-                      //   }).toList(),
-                      // );
+
                       return FutureBuilder<List<Ad>>(
-                          future:
-                              repo.getFavouriteAds(snapshot.data.favoriteAds),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
-                            }
-                            if (!snapshot.hasData || snapshot.data == null) {
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Center(
-                                      child:
-                                          Text('you have not favored any ads')),
-                                  MaterialButton(
-                                    color: Colors.teal,
-                                    onPressed: () {
-                                      goto(context, Sell());
-                                    },
-                                    child: Text('Browes ads'),
-                                  ),
-                                ],
-                              );
-                            } else {
-                              //   return AdTile(ad: snapshot.data);
-                              // }
-                              return ListView.builder(
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (context, index) {
-                                  return AdTile(ad: snapshot.data[index]);
-                                },
-                              );
-                            }
-                          });
+                        future: repo.getFavouriteAds(snapshot.data.favoriteAds),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                          if (!snapshot.hasData || snapshot.data == null) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Text('you have not favored any ads'),
+                                ),
+                                MaterialButton(
+                                  onPressed: () => goto(context, Sell()),
+                                  child: Text('Browes ads'),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) =>
+                                  FavouriteAdTile(ad: snapshot.data[index]),
+                            );
+                          }
+                        },
+                      );
                     },
                   ),
                 ],

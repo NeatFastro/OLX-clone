@@ -24,6 +24,9 @@ class AdTile extends StatelessWidget {
         child: ConstrainedBox(
           constraints: BoxConstraints(
             minWidth: 100,
+            maxWidth: 200,
+            minHeight: 100,
+            maxHeight: 200,
           ),
           child: DecoratedBox(
             decoration: BoxDecoration(
@@ -42,34 +45,27 @@ class AdTile extends StatelessWidget {
                     child: Stack(
                       alignment: Alignment.topCenter,
                       children: [
-                        Image.network(
-                          ad.images.length != 0 ? ad.images[0] : noTumbnailUrl,
-                          height: 120,
-                          // width: 200,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ColoredBox(
-                                color: Colors.yellow,
-                                child: Padding(
-                                  padding: EdgeInsets.all(4.0),
-                                  child: Text(
-                                    'FEATURED',
-                                    style: TextStyle(
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                        Image.network(ad.images[0]),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ColoredBox(
+                              color: Colors.yellow,
+                              child: Padding(
+                                padding: EdgeInsets.all(4.0),
+                                child: Text(
+                                  'FEATURED',
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
                               ),
-                              FavouritesButton(
-                                ad: ad,
-                              ),
-                            ],
-                          ),
+                            ),
+                            FavouritesButton(
+                              ad: ad,
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -86,24 +82,25 @@ class AdTile extends StatelessWidget {
                     child: Text(
                       ad.title,
                       maxLines: 1,
-                      // softWrap: true,
-                      // style: TextStyle(),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  // Row(
-                  //   mainAxisSize: MainAxisSize.min,
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Icon(Icons.location_on),
-                  //     Expanded(
-                  //       child: Text(
-                  //         ad.postedAt.toString(),
-                  //         maxLines: 1,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
+                  LimitedBox(
+                    maxWidth: 100,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(Icons.location_on, size: 14),
+                        Expanded(
+                          child: Text(
+                            ad.postedAt.toString(),
+                            maxLines: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

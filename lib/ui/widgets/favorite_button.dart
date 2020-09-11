@@ -28,8 +28,8 @@ class _FavouritesButtonState extends State<FavouritesButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 30,
-      width: 30,
+      height: 32,
+      width: 32,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -45,7 +45,10 @@ class _FavouritesButtonState extends State<FavouritesButton> {
         ),
         child: user == null || user.isAnonymous
             ? IconButton(
-                icon: Icon(Icons.favorite_border),
+                icon: Icon(
+                  Icons.favorite_border,
+                  size: 16,
+                ),
                 onPressed: () => goto(context, AuthenticationFow()))
             : FutureBuilder<UserDocument>(
                 future: repo.getUser(auth.currentUser.uid),
@@ -56,7 +59,7 @@ class _FavouritesButtonState extends State<FavouritesButton> {
                       width: 48,
                       child: Icon(
                         Icons.favorite_border,
-                        size: 20,
+                        size: 16,
                       ),
                     );
                   }
@@ -66,7 +69,7 @@ class _FavouritesButtonState extends State<FavouritesButton> {
                     isFavored = false;
                   }
                   return IconButton(
-                    iconSize: 12,
+                    iconSize: 16,
                     icon: isFavored
                         ? Icon(Icons.favorite)
                         : Icon(Icons.favorite_border),

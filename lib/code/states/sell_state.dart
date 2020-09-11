@@ -6,6 +6,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
 import 'package:olx_clone/code/models/ad.dart';
 import 'package:olx_clone/code/states/location_state.dart';
+import 'package:uuid/uuid.dart';
 
 class SellState extends ChangeNotifier {
   SellState() {
@@ -55,6 +56,7 @@ class SellState extends ChangeNotifier {
     User user = auth.currentUser;
 
     ad = Ad(
+      adId: Uuid().v4(),
       maker: this.selectedMaker,
       title: adTitle,
       description: description,
