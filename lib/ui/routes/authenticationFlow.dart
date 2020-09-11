@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:olx_clone/code/auth.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
-import 'package:olx_clone/code/models/user.dart';
+import 'package:olx_clone/code/models/userDocument.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/login.dart';
 import 'package:typicons_flutter/typicons_flutter.dart';
@@ -97,7 +97,7 @@ class AuthenticationFow extends StatelessWidget {
                           User user = await myAuth.googleSignIn();
 
                           if (user != null) {
-                            UserDoc userDoc = UserDoc(
+                            UserDocument userDoc = UserDocument(
                               id: user.uid,
                               name: user.displayName,
                               displayName: user.displayName,

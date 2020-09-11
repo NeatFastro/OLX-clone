@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
 import 'package:olx_clone/code/ambience/vars.dart';
-import 'package:olx_clone/code/models/user.dart';
+import 'package:olx_clone/code/models/userDocument.dart';
 
 class MessageBubble extends StatelessWidget {
   final String from;
   final String text;
-  final UserDoc currentUser;
+  final UserDocument currentUser;
   // final String timeStamp;
 
   final bool me;

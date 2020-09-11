@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
 import 'package:olx_clone/code/models/ad.dart';
-import 'package:olx_clone/code/services/repository.dart';
+import 'package:olx_clone/code/services/data_store.dart';
 import 'package:olx_clone/code/states/location_state.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:location/location.dart';
@@ -26,7 +26,7 @@ class _ExploreState extends State<Explore> {
   User user;
   List ads = [];
   List catergoryItems = [];
-  Repository repository = Repository();
+  DataStore repository = DataStore();
 
   fetchCategoryItems() {
     firestore

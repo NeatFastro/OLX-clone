@@ -3,15 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
 import 'package:olx_clone/code/models/ad.dart';
-import 'package:olx_clone/code/models/user.dart';
-import 'package:olx_clone/code/services/repository.dart';
+import 'package:olx_clone/code/models/userDocument.dart';
+import 'package:olx_clone/code/services/data_store.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/authenticationFlow.dart';
 import 'package:olx_clone/ui/routes/sell.dart';
 import 'package:olx_clone/ui/widgets/ad_tile.dart';
 
 class MyAds extends StatelessWidget {
-  final repo = Repository();
+  final repo = DataStore();
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -109,7 +109,7 @@ class MyAds extends StatelessWidget {
                     },
                   ),
                   //  favourites tab viewlogic starts here
-                  FutureBuilder<UserDoc>(
+                  FutureBuilder<UserDocument>(
                     future: repo.getUser(snapshot.data.uid),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {

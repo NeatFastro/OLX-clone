@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
 import 'package:olx_clone/code/ambience/providers.dart';
-import 'package:olx_clone/code/models/user.dart';
-import 'package:olx_clone/code/services/repository.dart';
+import 'package:olx_clone/code/models/userDocument.dart';
+import 'package:olx_clone/code/services/data_store.dart';
 import 'package:olx_clone/code/states/location_state.dart';
 import 'package:olx_clone/code/states/sell_state.dart';
 import 'package:olx_clone/code/utils.dart';
@@ -413,14 +413,14 @@ class ReviewAdDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Review your details')),
-      body: FutureBuilder<UserDoc>(
-          future: Repository().getUser(auth.currentUser.uid),
+      body: FutureBuilder<UserDocument>(
+          future: DataStore().getUser(auth.currentUser.uid),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(child: CircularProgressIndicator());
             }
 
-            UserDoc user = snapshot.data;
+            UserDocument user = snapshot.data;
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(

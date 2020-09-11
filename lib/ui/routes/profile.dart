@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:olx_clone/code/models/user.dart';
+import 'package:olx_clone/code/models/userDocument.dart';
 
 class Profile extends StatelessWidget {
-  final UserDoc user;
+  final UserDocument user;
   const Profile(this.user);
   @override
   Widget build(BuildContext context) {

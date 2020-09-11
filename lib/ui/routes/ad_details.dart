@@ -4,11 +4,12 @@ import 'package:olx_clone/code/ambience/objs.dart';
 import 'package:olx_clone/code/ambience/vars.dart';
 import 'package:olx_clone/code/models/ad.dart';
 import 'package:olx_clone/code/models/chat.dart';
-import 'package:olx_clone/code/models/user.dart';
-import 'package:olx_clone/code/services/repository.dart';
+import 'package:olx_clone/code/models/userDocument.dart';
+import 'package:olx_clone/code/services/data_store.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/authenticationFlow.dart';
 import 'package:olx_clone/ui/routes/chat_room.dart';
+import 'package:olx_clone/ui/routes/other_user_profile.dart';
 import 'package:olx_clone/ui/routes/profile.dart';
 import 'package:olx_clone/ui/widgets/carousel.dart';
 import 'package:olx_clone/ui/widgets/favorite_button_simple.dart';
@@ -96,7 +97,7 @@ class AdDetails extends StatelessWidget {
                 }
 
                 if (snapshot.hasData) {
-                  final user = UserDoc.fromDocument(snapshot.data);
+                  final user = UserDocument.fromDocument(snapshot.data);
                   // this.user = user;
                   return ListTile(
                     // isThreeLine: true,
@@ -116,7 +117,8 @@ class AdDetails extends StatelessWidget {
                         Text('member since 2020'),
                         GestureDetector(
                           onTap: () {
-                            goto(context, Profile(user));
+                            // goto(context, Profile(user));
+                            goto(context, OtherUserProfile(user));
                           },
                           child: Text(
                             'See profile',
@@ -211,7 +213,7 @@ class AdDetails extends StatelessWidget {
                     goto(context, AuthenticationFow());
                   } else {
                     bool createNewChat = true;
-                    Repository().getUser(auth.currentUser.uid).then((user) {
+                    DataStore().getUser(auth.currentUser.uid).then((user) {
                       print('got detail for current user from firestore');
                       if (user.chats != null) {
                         for (Map map in user.chats) {

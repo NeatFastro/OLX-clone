@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
 import 'package:olx_clone/code/models/ad.dart';
 import 'package:olx_clone/code/models/chat.dart';
-import 'package:olx_clone/code/models/user.dart';
-import 'package:olx_clone/code/services/repository.dart';
+import 'package:olx_clone/code/models/userDocument.dart';
+import 'package:olx_clone/code/services/data_store.dart';
 import 'package:olx_clone/ui/widgets/message_bubble.dart';
 
 class ChatRoom extends StatefulWidget {
@@ -19,7 +19,7 @@ class ChatRoom extends StatefulWidget {
 }
 
 class _ChatRoomState extends State<ChatRoom> {
-  final Repository repo = Repository();
+  final DataStore repo = DataStore();
   // UserDoc user;
 
   TextEditingController messageController = TextEditingController();
@@ -54,7 +54,7 @@ class _ChatRoomState extends State<ChatRoom> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<UserDoc>(
+    return FutureBuilder<UserDocument>(
       future: repo.getUser(widget.ad.postedBy),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -65,7 +65,7 @@ class _ChatRoomState extends State<ChatRoom> {
           );
         }
 
-        UserDoc user = snapshot.data;
+        UserDocument user = snapshot.data;
 
         return Scaffold(
           appBar: AppBar(

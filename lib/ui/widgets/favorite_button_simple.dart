@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
 import 'package:olx_clone/code/models/ad.dart';
-import 'package:olx_clone/code/models/user.dart';
-import 'package:olx_clone/code/services/repository.dart';
+import 'package:olx_clone/code/models/userDocument.dart';
+import 'package:olx_clone/code/services/data_store.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/authenticationFlow.dart';
 
@@ -23,7 +23,7 @@ class FavouritesButtonSimple extends StatefulWidget {
 
 class _FavouritesButtonSimpleState extends State<FavouritesButtonSimple> {
   bool isFavored = false;
-  final repo = Repository();
+  final repo = DataStore();
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class _FavouritesButtonSimpleState extends State<FavouritesButtonSimple> {
             onPressed: () {
               goto(context, AuthenticationFow());
             })
-        : FutureBuilder<UserDoc>(
+        : FutureBuilder<UserDocument>(
             // future: auth
             //     .currentUser()
             //     .then((firebaseUser) => repo.getUser(firebaseUser.uid)),

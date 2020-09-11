@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:olx_clone/code/ambience/objs.dart';
+import 'package:olx_clone/code/models/userDocument.dart';
+import 'package:olx_clone/code/services/data_store.dart';
+import 'package:olx_clone/code/utils.dart';
 
-class Notifications extends StatefulWidget {
-  @override
-  _NotificationsState createState() => _NotificationsState();
-}
+class Notifications extends StatelessWidget {
+  final DataStore _store = DataStore();
 
-class _NotificationsState extends State<Notifications> {
-  bool recommendationsAllowed = true;
-  bool specialCommunicationAndOffersAllowed = true;
+  final List notifications = [];
+
+  fetchNotifications() {
+    _store.getUser(auth.currentUser.uid).then((user) {
+      // return null;
+      // UserDocument.fromDocument(user.)
+      notifications.addAll(user.noitfications);
+    });
+  }
+//  repo.getUser();
 
   @override
   Widget build(BuildContext context) {
@@ -15,37 +24,17 @@ class _NotificationsState extends State<Notifications> {
       appBar: AppBar(
         title: Text('Notifications'),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: ListTile(
-              title: Text('Recommendations'),
-              subtitle: Text('Receive recommendations based on your activity'),
-              trailing: Switch(
-                value: recommendationsAllowed,
-                onChanged: (value) {
-                  setState(() {
-                    recommendationsAllowed = value;
-                  });
-                },
-              ),
-            ),
-          ),
-          ListTile(
-            title: Text('Special communications & offers'),
-            subtitle: Text('Receive updates, offers, surveys and more'),
-            trailing: Switch(
-              value: specialCommunicationAndOffersAllowed,
-              onChanged: (value) {
-                setState(() {
-                  specialCommunicationAndOffersAllowed = value;
-                });
-              },
-            ),
-            onTap: () {},
-          ),
-        ],
+      body: ListView.builder(
+        itemCount: notifications.length,
+        itemBuilder: (context, index) {
+          final notification = notifications[index];
+          return ListTile(
+            leading: Icon(Icons.icecream),
+            title: Text(notification.title),
+            subtitle: Text(notification.timeStamp),
+            // onTap: ()=> goto(context, notification.destination),
+          );
+        },
       ),
     );
   }

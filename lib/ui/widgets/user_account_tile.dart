@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:olx_clone/code/ambience/vars.dart';
-import 'package:olx_clone/code/models/user.dart';
+import 'package:olx_clone/code/models/userDocument.dart';
 
 class UserAccountTile extends StatelessWidget {
   final VoidCallback onPress;
-  final UserDoc user;
+  final UserDocument user;
 
   const UserAccountTile({
     Key key,

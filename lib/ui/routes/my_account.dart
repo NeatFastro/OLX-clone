@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:olx_clone/code/models/user.dart';
+import 'package:olx_clone/code/models/userDocument.dart';
 import 'package:olx_clone/code/utils.dart';
-import 'package:olx_clone/code/services/repository.dart';
+import 'package:olx_clone/code/services/data_store.dart';
 import 'package:olx_clone/ui/routes/authenticationFlow.dart';
 
 import 'package:olx_clone/ui/routes/invoices_and_billing.dart';
@@ -12,7 +12,7 @@ import 'package:olx_clone/ui/routes/settings.dart';
 import 'package:olx_clone/ui/widgets/user_account_tile.dart';
 
 class MyAccount extends StatelessWidget {
-  final Repository repository = Repository();
+  final DataStore repository = DataStore();
   // User user;
 
   // fetchUserDetails(String id) async {
@@ -37,13 +37,13 @@ class MyAccount extends StatelessWidget {
           // fetchUserDetails(user.uid);
           // repository.getUser(user.uid).then((user) =>  user);
 
-          return FutureBuilder<UserDoc>(
+          return FutureBuilder<UserDocument>(
               future: repository.getUser(user.uid),
-              builder: (context, AsyncSnapshot<UserDoc> snapshot) {
+              builder: (context, AsyncSnapshot<UserDocument> snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 }
-                UserDoc user = snapshot.data;
+                UserDocument user = snapshot.data;
                 return SafeArea(
                   child: Column(
                     children: [

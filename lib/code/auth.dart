@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:olx_clone/code/models/user.dart';
+import 'package:olx_clone/code/models/userDocument.dart';
 
 class Auth {
   final GoogleSignIn googleAuth = GoogleSignIn();
@@ -80,7 +80,7 @@ class Auth {
         print('user already exists');
       } else {
         DocumentReference userDocRef = _db.collection('users').doc(user.uid);
-        UserDoc userDoc = UserDoc(
+        UserDocument userDoc = UserDocument(
           id: user.uid,
           name: user.displayName,
           email: user.email,

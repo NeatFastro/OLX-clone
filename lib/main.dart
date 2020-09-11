@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:olx_clone/ui/routes/explore.dart';
 import 'package:olx_clone/ui/routes/root.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:olx_clone/code/ambience/objs.dart';
 import 'dart:ui';
 
-import 'code/ambience/objs.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

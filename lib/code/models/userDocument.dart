@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:olx_clone/code/ambience/vars.dart';
 
-class UserDoc {
+class UserDocument {
   final String id;
   final String name;
   final String displayName;
@@ -19,50 +20,56 @@ class UserDoc {
   final List followers;
   final List favoriteAds;
   final List chats;
+  final List noitfications;
+  final String status;
 
   String share = 'Follow me on #OLX_Clone to see my ads!';
 
-  UserDoc({
-    this.chats,
-    this.memberSince,
-    this.following,
-    this.followers,
+  UserDocument({
+    // this.about,
+    // this.joinedAt,
+    // this.deleted,
+    // this.steps,
     this.id,
     this.name,
     this.displayName,
     this.email,
     this.photoUrl,
-    // this.about,
     this.activeAds,
     this.deletedAccount = false,
-    // this.joinedAt,
-    // this.deleted,
-    // this.steps,
     this.phoneNumber,
+    this.memberSince,
+    this.following,
+    this.followers,
     this.favoriteAds,
+    this.chats,
+    this.noitfications,
+    this.status,
+    this.share,
   });
 
-  factory UserDoc.fromDocument(DocumentSnapshot document) {
+  factory UserDocument.fromDocument(DocumentSnapshot document) {
     final Map<String, dynamic> data = document.data();
     if (data == null) {
-      return UserDoc(name: 'Name', displayName: 'display name');
+      return UserDocument(name: 'Name', displayName: 'display name');
     }
-    return UserDoc(
-      id: document.id,
-      name: data['name'] ?? '',
-      displayName: data['displayName'] ?? '',
-      email: data['email'] ?? '',
-      photoUrl: data['photoUrl'] ?? noPhotoUrl,
-      phoneNumber: data['phoneNumber'] ?? 'your phone number',
-      // about: ['about'] ?? '',
-      activeAds: data['activeAds'] ?? [],
-      favoriteAds: data['favoriteAds'] ?? [],
-      followers: data['followers'],
-      following: data['following'],
-      memberSince: data['memberSince'],
-      deletedAccount: data['deletedAccount'] ?? false,
-      chats: data['chats'],
-    );
+    return UserDocument(
+        id: document.id,
+        name: data['name'] ?? '',
+        displayName: data['displayName'] ?? '',
+        email: data['email'] ?? '',
+        photoUrl: data['photoUrl'] ?? noPhotoUrl,
+        phoneNumber: data['phoneNumber'] ?? 'your phone number',
+        // about: ['about'] ?? '',
+        activeAds: data['activeAds'] ?? [],
+        favoriteAds: data['favoriteAds'] ?? [],
+        followers: data['followers'],
+        following: data['following'],
+        memberSince: data['memberSince'],
+        deletedAccount: data['deletedAccount'] ?? false,
+        chats: data['chats'],
+        noitfications: data['notifications'],
+        status: data['status']);
   }
 
   Map<String, dynamic> toDocument() {
@@ -82,6 +89,8 @@ class UserDoc {
       // 'memberSince': Timestamp.fromDate(this.memberSince),
       'deletedAccount': this.deletedAccount,
       'chats': this.chats,
+      'notifications': this.noitfications,
+      'status': this.status,
     };
   }
 }

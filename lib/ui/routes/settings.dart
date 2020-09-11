@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
+import 'package:olx_clone/code/auth.dart';
 import 'package:olx_clone/code/utils.dart';
-import 'package:olx_clone/ui/routes/notifications.dart';
+import 'package:olx_clone/ui/routes/app_notifications_setting.dart';
 
 class Settings extends StatelessWidget {
   @override
@@ -22,7 +23,7 @@ class Settings extends StatelessWidget {
             title: Text('Notifications'),
             subtitle: Text('Recommendations & Special communications'),
             onTap: () {
-              goto(context, Notifications());
+              goto(context, AppNotificationsSetting());
             },
           ),
           ListTile(
@@ -51,7 +52,8 @@ class Settings extends StatelessWidget {
                       MaterialButton(
                         // color: Colors.blue,
                         onPressed: () {
-                          auth.signOut();
+                          // auth.signOut();
+                          Auth().signOut();
                           // pop(context);
                           Navigator.of(context).popUntil(
                               ModalRoute.withName(Navigator.defaultRouteName));
@@ -93,7 +95,7 @@ class Settings extends StatelessWidget {
                   .collection('users')
                   .doc(auth.currentUser.uid)
                   .update({'deletedAccount': true});
-                  // .update(UserDoc(deletedAccount: true).toDocument());
+              // .update(UserDoc(deletedAccount: true).toDocument());
 
               Navigator.of(context)
                   .popUntil(ModalRoute.withName(Navigator.defaultRouteName));

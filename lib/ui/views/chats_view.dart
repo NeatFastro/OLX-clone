@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/chat_room.dart';
-import 'package:olx_clone/code/services/repository.dart';
+import 'package:olx_clone/code/services/data_store.dart';
 import 'package:olx_clone/code/models/ad.dart';
 import 'package:olx_clone/code/models/chat.dart';
 
@@ -14,7 +14,7 @@ class ChatsList extends StatelessWidget {
 
 // class _ChatsListState extends State<ChatsList> {
 
-  final repo = Repository();
+  final repo = DataStore();
 
   @override
   Widget build(BuildContext context) {
