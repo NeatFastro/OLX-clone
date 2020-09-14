@@ -7,7 +7,6 @@ import 'package:olx_clone/code/ambience/providers.dart';
 import 'package:olx_clone/code/models/userDocument.dart';
 import 'package:olx_clone/code/services/data_store.dart';
 import 'package:olx_clone/code/states/location_state.dart';
-import 'package:olx_clone/code/states/sell_state.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/location.dart';
 import 'package:olx_clone/ui/routes/profile.dart';
@@ -29,7 +28,7 @@ class Sell extends StatelessWidget {
 
         return Scaffold(
           body: PageView(
-            // physics: NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             controller: sellState.pagesController,
             children: [
               FormPage(),
@@ -207,6 +206,7 @@ class FormPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: TextFormField(
+                        maxLines: 8,
                         // maxLengthEnforced: true,
                         // autofillHints: ,
                         onChanged: (input) {

@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
 import 'package:olx_clone/code/auth.dart';
-import 'package:olx_clone/code/utils.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
 
 class SignIn extends StatefulWidget {
@@ -107,35 +105,42 @@ class _SignInState extends State<SignIn> {
                 Spacer(),
                 MaterialButton(
                   onPressed: () {
-                          if (_formKey.currentState.validate()) {
-                            // auth
-                            //     .createUserWithEmailAndPassword(
-                            //         email: email, password: password)
-                            //     .then((userCredential) {
-                            //   print('sending eamil verification code');
-                            //   auth.applyActionCode('9834275098090');
-                            // }).catchError((e) {
-                            //   print('there was an error signing in $e');
-                            // });
+                    if (_formKey.currentState.validate()) {
+                      // auth
+                      //     .createUserWithEmailAndPassword(
+                      //         email: email, password: password)
+                      //     .then((userCredential) {
+                      //   print('sending eamil verification code');
+                      //   auth.applyActionCode('9834275098090');
+                      // }).catchError((e) {
+                      //   print('there was an error signing in $e');
+                      // });
 
-                            // Auth().signInWithEmailAndGeneratedPin(
-                            //   email,
-                            //   password,
-                            // );
-                            Auth().signInWithEmailAndPassword(email, password);
+                      // Auth().signInWithEmailAndGeneratedPin(
+                      //   email,
+                      //   password,
+                      // );
+                      // Auth().signInWithEmailAndPassword(email, password);
+                      auth
+                          .createUserWithEmailAndPassword(
+                              email: this.email, password: this.password)
+                          .then((userCredential) {
+                        // return null;
+                        print('user registred');
+                      });
 
-                            // auth.authStateChanges().listen((user) {
-                            //   print('user signed in succesful');
-                            //   print(user);
-                            //   if (user != null) pop(context);
-                            // });
+                      // auth.authStateChanges().listen((user) {
+                      //   print('user signed in succesful');
+                      //   print(user);
+                      //   if (user != null) pop(context);
+                      // });
 
-                            // pageViewController.nextPage(
-                            //     duration: Duration(milliseconds: 200),
-                            //     curve: Curves.bounceIn);
-                            // initialPage = 1;
-                          }
-                        },
+                      // pageViewController.nextPage(
+                      //     duration: Duration(milliseconds: 200),
+                      //     curve: Curves.bounceIn);
+                      // initialPage = 1;
+                    }
+                  },
                   color: Colors.teal[900],
                   minWidth: double.infinity,
                   child: Text('Next'),

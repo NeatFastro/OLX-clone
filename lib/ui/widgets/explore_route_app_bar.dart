@@ -17,7 +17,7 @@ class ExploreRouteAppBar extends StatelessWidget {
         },
         child: Row(
           children: [
-            Icon(Icons.gps_fixed),
+            Icon(Icons.location_on),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Consumer(
@@ -33,7 +33,7 @@ class ExploreRouteAppBar extends StatelessWidget {
                 },
               ),
             ),
-            Icon(Icons.arrow_downward),
+            Icon(Icons.keyboard_arrow_down),
           ],
         ),
       ),
@@ -80,7 +80,7 @@ class ExploreRouteAppBar extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(Icons.notifications),
-              onPressed: ()=> goto(context, AppNotificationsSetting()),
+              onPressed: () => goto(context, AppNotificationsSetting()),
             ),
           ],
         ),

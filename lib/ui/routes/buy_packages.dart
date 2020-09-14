@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:olx_clone/code/ambience/providers.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/choose_an_option.dart';
 import 'package:olx_clone/ui/widgets/categories_list.dart';
@@ -39,8 +41,13 @@ class BuyPackages extends StatelessWidget {
           Divider(),
           ListTile(
             title: Text('Location'),
-            //TODO make sutbitle dynamic
-            subtitle: Text('Pakistan'),
+            //TODO make subtitle dynamic
+            subtitle: Consumer(
+                // stream: null,
+                builder: (context, read, _) {
+              final state = read(locationStateProvider);
+              return Text(state.currentAddress?.adminArea ?? 'Pakistan');
+            }),
             trailing: Icon(Icons.arrow_forward_ios),
             onTap: () {
               // goto(context, InvoicesAndBilling());

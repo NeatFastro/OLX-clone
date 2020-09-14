@@ -4,20 +4,31 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
         {
-            "name": "Flutter",
+            "name": "web",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+              "-d",
+              "chrome"
+            ]
+          },
+        {
+            "name": "android",
             "type": "dart",
             "request": "launch",
             "program": "lib/main.dart"
         },
+    ],
+    "compounds": [
         {
-            "name": "Flutter",
-            "type": "dart",
-            "request": "launch",
-            "program": "lib/main.dart"
+            "name": "All Devices",
+            "configurations": [
+                "web",
+                "android",
+            ]
         }
-        
-        
-        
     ]
 }

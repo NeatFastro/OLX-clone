@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:olx_clone/code/ambience/vars.dart';
 
 class Ad {
@@ -7,6 +8,7 @@ class Ad {
   final String title;
   final String price;
   final String maker;
+  final String category;
   final String model;
   final String year;
   final String condition;
@@ -19,20 +21,21 @@ class Ad {
   final List chats;
 
   const Ad({
+    // this.postedDate,
     this.adId,
     this.postedBy,
     this.title,
     this.price,
     this.maker,
+    this.category,
     this.model,
     this.year,
     this.condition,
     this.description,
     this.images,
     this.postedAt,
-    this.chats,
-    // this.postedDate,
     this.adUploadLocation,
+    this.chats,
   });
 
   factory Ad.fromDocument(DocumentSnapshot document) {
@@ -40,7 +43,7 @@ class Ad {
     return Ad(
       adId: document.id,
       title: data['title'] ?? 'no title',
-      price: data['price'] ?? '',
+      price: data['price'] ?? '0',
       maker: data['maker'] ?? '',
       model: data['model'] ?? '',
       year: data['year'] ?? '',

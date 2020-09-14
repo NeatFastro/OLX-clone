@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:olx_clone/code/models/ad.dart';
-import 'package:olx_clone/ui/widgets/favorite_button.dart';
 import 'package:olx_clone/ui/widgets/favorite_button_simple.dart';
 
 class FavouriteAdTile extends StatelessWidget {

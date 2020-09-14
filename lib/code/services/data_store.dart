@@ -21,8 +21,8 @@ class DataStore {
         .limit(5)
         .get();
 
-        print('related cats are');
-        print(querySnapshot.docs);
+    print('related cats are');
+    print(querySnapshot.docs);
 
     return querySnapshot.docs.map((doc) => Ad.fromDocument(doc)).toList();
   }
@@ -54,9 +54,10 @@ class DataStore {
     }
   }
 
+// check if user is online or not
   checkUserStatus(String id) {
     _db.collection('users').doc(id).get().then((doc) {
-      UserDocument userDoc = UserDocument.fromDocument(doc);
+      // UserDocument userDoc = UserDocument.fromDocument(doc);
     });
   }
 
@@ -74,7 +75,7 @@ class DataStore {
   Future<List<Ad>> getFavouriteAds(List ids) async {
     List<Ad> favouriteAds = [];
     // ids.forEach((id) async {
-    //   Ad ad = await getAd(id);
+    //   Ad ad = await getAd(id);k
     //   favouriteAds.add(ad);
     //   if (favouriteAds.length == ids.length) {
     //     print('lengths became equla');
@@ -94,9 +95,6 @@ class DataStore {
   Future<List<Ad>> getUserAds(String id) async {
     QuerySnapshot querySnapshot =
         await _db.collection('ads').where('postedBy', isEqualTo: id).get();
-
-    print('got specific user ads');
-    print('${querySnapshot.docs.length}');
 
     return querySnapshot.docs.map((doc) => Ad.fromDocument(doc)).toList();
   }

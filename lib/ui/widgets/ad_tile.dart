@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:olx_clone/code/ambience/vars.dart';
 import 'package:olx_clone/code/models/ad.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/ad_details.dart';
