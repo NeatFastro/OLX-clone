@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
 import 'package:olx_clone/code/models/ad.dart';
+import 'package:olx_clone/code/models/category.dart';
 import 'package:olx_clone/code/models/userDocument.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/authenticationFlow.dart';
@@ -97,5 +98,27 @@ class DataStore {
         await _db.collection('ads').where('postedBy', isEqualTo: id).get();
 
     return querySnapshot.docs.map((doc) => Ad.fromDocument(doc)).toList();
+  }
+
+  Future<List<Category>> getCategories() async {
+    QuerySnapshot querySnapshot = await _db.collection('categories').get();
+
+    return querySnapshot.docs.map((doc) => Category.fromDoc(doc)).toList();
+  }
+
+  getCategory(String id) async {
+    var documentSnapshot = await _db.collection('categories').doc(id).get();
+    return Category.fromDoc(documentSnapshot);
+  }
+
+  Future<List<Category>> getMainCategories(int limit) async {
+    var querySnapshot = await _db
+        .collection('categories')
+        .where('parentId', isEqualTo: 'null')
+        .limit(limit)
+        .get()
+        .catchError((onError) => print(onError));
+
+    return querySnapshot.docs.map((doc) => Category.fromDoc(doc)).toList();
   }
 }

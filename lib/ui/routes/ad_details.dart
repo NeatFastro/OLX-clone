@@ -13,12 +13,17 @@ import 'package:olx_clone/ui/routes/other_user_profile.dart';
 import 'package:olx_clone/ui/widgets/ad_tile.dart';
 import 'package:olx_clone/ui/widgets/carousel.dart';
 import 'package:olx_clone/ui/widgets/favorite_button_simple.dart';
+import 'package:time_ago_provider/time_ago_provider.dart' as timeAgo;
 
 class AdDetails extends StatelessWidget {
+// final postDate=  DateTime.now().subtract();
+
+  final postDate;
+
   final Ad ad;
   // UserDoc user;
   final data = DataStore();
-  AdDetails({Key key, this.ad}) : super(key: key);
+  AdDetails({Key key, this.ad}) : postDate = DateTime.parse(ad.timeStamp);
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +62,11 @@ class AdDetails extends StatelessWidget {
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Icon(Icons.location_on),
-                Text('location from where the ad was posted'),
+                // Text('location from where the ad was posted'),
+                Text(ad.adUploadLocation.toString()),
                 Spacer(),
-                Text('2 days ago'),
+                // Text('2 days ago'),
+                Text(timeAgo.format(postDate, locale: 'en_short')),
               ],
             ),
             Divider(),
@@ -164,7 +171,6 @@ class AdDetails extends StatelessWidget {
               'Related Ads',
               style: textStyle,
             ),
-            
             FutureBuilder<List<Ad>>(
               future: data.getRelatedAds(ad),
               builder: (context, snapshot) {

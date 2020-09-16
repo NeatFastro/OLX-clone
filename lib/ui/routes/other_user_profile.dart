@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:olx_clone/code/ambience/objs.dart';
 import 'package:olx_clone/code/ambience/vars.dart';
 import 'package:olx_clone/code/models/ad.dart';
 

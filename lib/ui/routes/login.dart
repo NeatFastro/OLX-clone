@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
-import 'package:olx_clone/code/auth.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
 
 class SignIn extends StatefulWidget {

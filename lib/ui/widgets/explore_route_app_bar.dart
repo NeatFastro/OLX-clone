@@ -4,7 +4,7 @@ import 'package:olx_clone/code/ambience/providers.dart';
 import 'package:olx_clone/code/states/location_state.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/location.dart';
-import 'package:olx_clone/ui/routes/app_notifications_setting.dart';
+import 'package:olx_clone/ui/routes/notifications.dart';
 import 'package:olx_clone/ui/routes/search.dart';
 
 class ExploreRouteAppBar extends StatelessWidget {
@@ -80,7 +80,7 @@ class ExploreRouteAppBar extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(Icons.notifications),
-              onPressed: () => goto(context, AppNotificationsSetting()),
+              onPressed: () => goto(context, Notifications()),
             ),
           ],
         ),

@@ -35,7 +35,7 @@ class _ExploreState extends State<Explore> {
         .limit(9)
         .get()
         .then((items) {
-      print(items);
+      // print(items);
       catergoryItems.addAll(items.docs);
     });
   }

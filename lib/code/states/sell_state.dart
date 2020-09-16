@@ -15,29 +15,24 @@ class SellState extends ChangeNotifier {
 
   Ad ad;
 
-  List<Asset> images = List<Asset>();
-  List<String> downloadUrls = [];
-
-  List<String> pages = ['form', 'uploadPicstures', 'setPrice', 'setLocation'];
-
   PageController pagesController = PageController();
-
+  List<String> pages = ['form', 'uploadPicstures', 'setPrice', 'setLocation'];
   List<String> makers = ['sony, samsung, apple, lg, google'];
-  String selectedMaker;
-  var makerSelectorController = TextEditingController(text: '');
-
   List conditions = ['New', 'used'];
-  String _selectedCondition = '';
+  List<String> downloadUrls = [];
+  List<Asset> images = List<Asset>();
+
+  TextEditingController makerSelectorController =
+      TextEditingController(text: '');
 
   String adTitle;
   String description;
+  String selectedMaker;
+  String _selectedCondition = '';
   String price;
+  String category;
 
-  // GeoPoint adUploadLocation;
-
-  // Map ad;
-
-  final formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   get selectedCondition => _selectedCondition;
 
@@ -46,13 +41,10 @@ class SellState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setAd() async {
-    // ad.maker = selectedMaker;
-    // ad.title = adTitle;
-    // ad.description = description;
-    // ad.price = price;
-    // ad.condition = selectedCondition;
-    // ad.images.addAll(downloadUrls);
+  Future<void> setAd(images) async {
+    if (this.images.isNotEmpty) {
+      storeImagesInTempDir(images);
+    }
     User user = auth.currentUser;
 
     ad = Ad(
@@ -63,7 +55,7 @@ class SellState extends ChangeNotifier {
       price: price,
       condition: selectedCondition,
       images: downloadUrls,
-      postedAt: DateTime.now().toIso8601String(),
+      timeStamp: DateTime.now().toIso8601String(),
       postedBy: user.uid,
       adUploadLocation: LocationState().currentGeoPoint,
     );

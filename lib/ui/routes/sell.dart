@@ -8,8 +8,11 @@ import 'package:olx_clone/code/models/userDocument.dart';
 import 'package:olx_clone/code/services/data_store.dart';
 import 'package:olx_clone/code/states/location_state.dart';
 import 'package:olx_clone/code/utils.dart';
+import 'package:olx_clone/ui/routes/authenticationFlow.dart';
 import 'package:olx_clone/ui/routes/location.dart';
 import 'package:olx_clone/ui/routes/profile.dart';
+import 'package:olx_clone/ui/widgets/categories_list.dart';
+import 'package:olx_clone/ui/widgets/sub_categories_list_2.dart';
 import 'package:olx_clone/ui/widgets/user_account_tile.dart';
 
 // how to upload multiple files to firebase storage
@@ -37,40 +40,38 @@ class Sell extends StatelessWidget {
               ConfirmYourLocationPage(),
               Location(title: 'Confirm your location'),
               ReviewAdDetailsPage(),
+              // add ad review widget
             ],
           ),
           bottomNavigationBar: Material(
             elevation: 100,
             child: MaterialButton(
               onPressed: () {
-                print('going to next page');
-                // sellStateProvider.read(context).pagesController.nextPage(
-                //       duration: Duration(milliseconds: 200),
-                //       curve: Curves.bounceIn,
-                //     );
-                // if (state.pagesController.page < 3.0) {
-                if (sellState.pagesController.page != 3) {
+                print('current page ${sellState.pagesController.page}');
+                print('going to next page ' +
+                    sellState.pagesController.page.toString());
+
+                if (sellState.pagesController.page == 4.0) {
+                  print('going to post ad');
+                  if (auth.currentUser.isAnonymous) {
+                    goto(context, AuthenticationFow());
+                  }
+                }
+                if (sellState.pagesController.page != 5) {
                   sellState.pagesController.nextPage(
                     duration: Duration(milliseconds: 200),
                     curve: Curves.bounceIn,
                   );
-                }
-                // }
-                if (sellState.pagesController.page == 5.0) {
-                  if (sellState.images.isNotEmpty) {
-                    // uploadFiles(images);
-                    sellState.storeImagesInTempDir(sellState.images);
-                  }
-
-                  sellState.setAd();
-
+                } else {
+                  sellState.setAd(sellState.images);
+                  print('posting ad');
                   firestore
                       .collection('ads')
                       .doc()
                       .set(sellState.ad?.toDocument());
-                  // goto the review ad page
-                  // goto();
                 }
+
+
               },
               color: Colors.teal[900],
               minWidth: double.infinity,
@@ -441,7 +442,7 @@ class ReviewAdDetailsPage extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             child: Text(
-                              user.phoneNumber,
+                              user.phoneNumber ?? 'please enter a phone number',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),

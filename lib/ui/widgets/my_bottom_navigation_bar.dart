@@ -17,7 +17,7 @@ class MyBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var itemWidth = MediaQuery.of(context).size.width * .2;
+    var itemWidth = MediaQuery.of(context).size.width * .20;
 
     return Row(
       mainAxisSize: MainAxisSize.min,

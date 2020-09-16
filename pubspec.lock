@@ -148,6 +148,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  firebase_messaging:
+    dependency: "direct main"
+    description:
+      name: firebase_messaging
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "7.0.0"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -462,6 +469,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.19-nullsafety"
+  time_ago_provider:
+    dependency: "direct main"
+    description:
+      name: time_ago_provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.5"
   typed_data:
     dependency: transitive
     description:

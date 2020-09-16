@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:olx_clone/code/ambience/objs.dart';
+import 'package:olx_clone/code/ambience/vars.dart';
+import 'package:olx_clone/code/models/cloud_message.dart';
 import 'package:olx_clone/code/utils.dart';
+import 'package:olx_clone/ui/routes/category_selector.dart';
+import 'package:olx_clone/ui/routes/notifications.dart';
 import 'package:typicons_flutter/typicons_flutter.dart';
 
 import 'package:olx_clone/ui/routes/chats.dart';
@@ -19,7 +24,7 @@ class Root extends StatefulWidget {
 class _RootState extends State<Root> {
   final Explore explore = Explore();
   final Chats chats = Chats();
-  // final Sell sell = Sell();
+  final Sell sell = Sell();
   final MyAds myAds = MyAds();
   final MyAccount myAccount = MyAccount();
 
@@ -27,16 +32,43 @@ class _RootState extends State<Root> {
   Widget currentRoute;
   int currentRouteIndex = 0;
 
+  initFirebaseMessagingConfiguration() {
+    firebaseMessaging.configure(
+      onMessage: (message) {
+        print('onMessage');
+        var cloudMessage = CloudMessage.fromMap(message);
+
+        cloudMessages.add(cloudMessage);
+        goto(context, Notifications());
+        // print(notification);
+      },
+      onResume: (message) {
+        print('onResume');
+        var cloudMessage = CloudMessage.fromMap(message);
+
+        cloudMessages.add(cloudMessage);
+        Future.delayed(Duration(milliseconds: 50000)).then((value) {
+          goto(context, Notifications());
+        });
+      },
+      onLaunch: (message) {
+        print('on launch called');
+        print(message);
+      },
+    );
+  }
+
   // final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
+    initFirebaseMessagingConfiguration();
     super.initState();
 
     routes = [
       explore,
       chats,
-      // sell,
+      sell,
       myAds,
       myAccount,
     ];
@@ -51,9 +83,7 @@ class _RootState extends State<Root> {
       // endDrawer: AuthenticationFow(),
       body: currentRoute,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          goto(context, Sell());
-        },
+        onPressed: () => goto(context, CategorySelector()),
         child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -126,11 +156,11 @@ class _RootState extends State<Root> {
               activeIcon: Icons.chat,
               label: 'CHATS',
             ),
-            // MyBottomNavigationBarItem(
-            //   icon: Icons.chat_bubble_outline,
-            //   activeIcon: Icons.chat,
-            //   label: 'CHATS',
-            // ),
+            MyBottomNavigationBarItem(
+              icon: Icons.chat_bubble_outline,
+              activeIcon: Icons.chat,
+              label: 'SELL',
+            ),
             MyBottomNavigationBarItem(
               icon: Icons.content_copy,
               activeIcon: Icons.description,

@@ -1,22 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:olx_clone/code/ambience/objs.dart';
-import 'package:olx_clone/code/models/userDocument.dart';
-import 'package:olx_clone/code/services/data_store.dart';
-import 'package:olx_clone/code/utils.dart';
+import 'package:olx_clone/code/ambience/vars.dart';
+// import 'package:olx_clone/code/models/notification.dart' as model;
 
+// final List<model.Notification> notifications = [];
 class Notifications extends StatelessWidget {
-  final DataStore _store = DataStore();
+  // final model.Notification notification;
 
-  final List notifications = [];
-
-  fetchNotifications() {
-    _store.getUser(auth.currentUser.uid).then((user) {
-      // return null;
-      // UserDocument.fromDocument(user.)
-      notifications.addAll(user.noitfications);
-    });
-  }
-//  repo.getUser();
+  // Notifications([this.notification]) {
+  //   notifications.add(this.notification);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +17,32 @@ class Notifications extends StatelessWidget {
         title: Text('Notifications'),
       ),
       body: ListView.builder(
-        itemCount: notifications.length,
+        itemCount: cloudMessages.length,
         itemBuilder: (context, index) {
-          final notification = notifications[index];
+          // final model.Notification notification = notifications[index];
+
           return ListTile(
             leading: Icon(Icons.icecream),
-            title: Text(notification.title),
-            subtitle: Text(notification.timeStamp),
-            // onTap: ()=> goto(context, notification.destination),
+            // title: Text(notifications[index]['notification']['title'] ?? 'null title'),
+            title: Text(cloudMessages[index].notification.title ?? 'null body'),
+            subtitle:
+                Text(cloudMessages[index].notification.body ?? 'null body'),
           );
         },
       ),
+      // body: Consumer(
+      //   builder: (BuildContext context,
+      //       T Function<T>(ProviderBase<Object, T>) watch, Widget child) {
+      //     var appState = watch(appStateProvider);
+      //     return ListView.builder(
+      //         itemCount: appState.notifications.length,
+      //         itemBuilder: (context, index) {
+      //           return ListTile(
+      //             title: Text(appState.notifications[index].title?? 'error'),
+      //           );
+      //         });
+      //   },
+      // ),
     );
   }
 }

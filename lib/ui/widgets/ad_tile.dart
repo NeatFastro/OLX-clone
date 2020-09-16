@@ -93,7 +93,7 @@ class AdTile extends StatelessWidget {
                         Icon(Icons.location_on, size: 14),
                         Expanded(
                           child: Text(
-                            ad.postedAt.toString(),
+                            ad.timeStamp.toString(),
                             maxLines: 1,
                           ),
                         ),
