@@ -13,9 +13,10 @@ class Ad {
   final String year;
   final String condition;
   final String description;
+  final int views;
   final List images;
   // approx location (lang, lat) of where the ad was posted
-  final String timeStamp;
+  final String postedAt;
   // final DateTime postedDate;
   final GeoPoint adUploadLocation;
   final List chats;
@@ -32,8 +33,9 @@ class Ad {
     this.year,
     this.condition,
     this.description,
+    this.views,
     this.images,
-    this.timeStamp,
+    this.postedAt,
     this.adUploadLocation,
     this.chats,
   });
@@ -49,8 +51,9 @@ class Ad {
       year: data['year'] ?? '',
       condition: data['condition'] ?? '',
       description: data['description'] ?? '',
+      views: data['views'] ?? 0,
       postedBy: data['postedBy'] ?? '',
-      timeStamp: data['postedAt'] ?? 'unknown post date',
+      postedAt: data['postedAt'] ?? 'post date unknown',
       // images: data['images']?? ['https://ppc.tools/wp-content/themes/ppctools/img/no-thumbnail.jpg'],
       images:
           (data['images'] as List).isEmpty ? [noTumbnailUrl] : data['images'],
@@ -70,9 +73,10 @@ class Ad {
       'year': this.year,
       'condition': this.condition,
       'description': this.description,
+      'views': this.views,
       'images': this.images,
       // 'postedAt': this.postedAt?.millisecondsSinceEpoch,
-      'postedAt': this.timeStamp,
+      'postedAt': this.postedAt,
       'chats': this.chats,
       'adUploadLocation': this.adUploadLocation,
     };

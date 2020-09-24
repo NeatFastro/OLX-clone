@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+// import 'package:latlng/latlng.dart';
+// import 'package:map/map.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
 import 'package:olx_clone/code/ambience/vars.dart';
 import 'package:olx_clone/code/models/ad.dart';
@@ -19,11 +21,15 @@ class AdDetails extends StatelessWidget {
 // final postDate=  DateTime.now().subtract();
 
   final postDate;
+  // final MapController mapController;
 
   final Ad ad;
   // UserDoc user;
   final data = DataStore();
-  AdDetails({Key key, this.ad}) : postDate = DateTime.parse(ad.timeStamp);
+  AdDetails({Key key, this.ad}) : postDate = DateTime.parse(ad.postedAt);
+  // mapController = MapController(
+  //     location: LatLng(
+  //         ad.adUploadLocation.latitude, ad.adUploadLocation.longitude));
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +137,7 @@ class AdDetails extends StatelessWidget {
                     trailing: Icon(Icons.arrow_forward_ios),
                   );
                 }
-                return Container();
+                return SizedBox();
               },
             ),
             Divider(),
@@ -141,7 +147,11 @@ class AdDetails extends StatelessWidget {
             ),
             SizedBox(
               height: 260,
-              child: Placeholder(),
+              // child: Map(
+              //   controller: mapController,
+              //   provider: CachedGoogleMapProvider(),
+              // ),
+              child:Placeholder(),
             ),
             Divider(),
             Row(
@@ -197,101 +207,119 @@ class AdDetails extends StatelessWidget {
       bottomNavigationBar: Material(
         elevation: 10,
         child: SizedBox(
-          height: 60,
+          height: 80,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              FlatButton.icon(
-                color: Colors.teal,
-                onPressed: () {
-                  print('initiating chat');
-                  if (auth.currentUser == null) {
-                    goto(context, AuthenticationFow());
-                  } else {
-                    bool createNewChat = true;
-                    DataStore().getUser(auth.currentUser.uid).then((user) {
-                      print('got detail for current user from firestore');
-                      if (user.chats != null) {
-                        for (Map map in user.chats) {
-                          if (map.containsValue(ad.adId)) {
-                            print('condition evaluated to true');
-                            createNewChat = false;
-                            firestore
-                                .collection('chats')
-                                .doc(map['chat'])
-                                .get()
-                                .then((chatDocument) {
-                              Chat chat = Chat.fromDocument(chatDocument);
-                              goto(
-                                context,
-                                ChatRoom(
-                                  ad: ad,
-                                  chat: chat,
-                                ),
-                              );
-                            });
-                            break;
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: FlatButton.icon(
+                    height: 60,
+                    color: Colors.teal,
+                    onPressed: () {
+                      print('initiating chat');
+                      if (auth.currentUser == null) {
+                        goto(context, AuthenticationFow());
+                      } else {
+                        bool createNewChat = true;
+                        DataStore().getUser(auth.currentUser.uid).then((user) {
+                          print('got detail for current user from firestore');
+                          if (user.chats != null) {
+                            for (dynamic map in user.chats) {
+                              if (map.containsValue(ad.adId)) {
+                                print('condition evaluated to true');
+                                createNewChat = false;
+                                firestore
+                                    .collection('chats')
+                                    .doc(map['chat'])
+                                    .get()
+                                    .then((chatDocument) {
+                                  Chat chat = Chat.fromDocument(chatDocument);
+                                  goto(
+                                    context,
+                                    ChatRoom(
+                                      ad: ad,
+                                      chat: chat,
+                                    ),
+                                  );
+                                });
+                                break;
+                              }
+                            }
                           }
-                        }
-                      }
-                      print('will create new chat doc $createNewChat');
+                          print('will create new chat doc $createNewChat');
 
-                      if (createNewChat == true) {
-                        print('going to chat room ');
-                        firestore.collection('chats').add(
-                          {
-                            'between': [auth.currentUser.uid, ad.postedBy],
-                            'correspondingAd': ad.adId,
-                            'correspondingAdTitle': ad.title,
-                            'messages': [
+                          if (createNewChat == true) {
+                            print('going to chat room ');
+                            firestore.collection('chats').add(
                               {
-                                'from': 'Olx',
-                                'Content':
-                                    'Never make payments or send products in advance, to avoid the risk of fraud',
-                                'timeStamp': 'since inception',
-                              }
-                            ],
-                          },
-                        ).then((doc) {
-                          firestore
-                              .collection('users')
-                              .doc(auth.currentUser.uid)
-                              .update({
-                            'chats': FieldValue.arrayUnion([
-                              {
-                                'type': 'buying',
-                                'ad': ad.adId,
-                                'chat': doc.id,
-                              }
-                            ]),
-                          });
-                          doc.get().then((value) {
-                            goto(
-                                context,
-                                ChatRoom(
-                                  ad: ad,
-                                  chat: Chat.fromDocument(value),
-                                ));
-                          });
+                                'between': [auth.currentUser.uid, ad.postedBy],
+                                'correspondingAd': ad.adId,
+                                'correspondingAdTitle': ad.title,
+                                'messages': [
+                                  {
+                                    'from': 'Olx',
+                                    'Content':
+                                        'Never make payments or send products in advance, to avoid the risk of fraud',
+                                    'timeStamp': 'since inception',
+                                  }
+                                ],
+                              },
+                            ).then((doc) {
+                              firestore
+                                  .collection('users')
+                                  .doc(auth.currentUser.uid)
+                                  .update({
+                                'chats': FieldValue.arrayUnion([
+                                  {
+                                    'type': 'buying',
+                                    'ad': ad.adId,
+                                    'chat': doc.id,
+                                  }
+                                ]),
+                              });
+                              doc.get().then((value) {
+                                goto(
+                                    context,
+                                    ChatRoom(
+                                      ad: ad,
+                                      chat: Chat.fromDocument(value),
+                                    ));
+                              });
+                            });
+                          }
                         });
                       }
-                    });
-                  }
-                },
-                icon: Icon(Icons.chat_bubble_outline),
-                label: Text('Chat'),
+                    },
+                    icon: Icon(Icons.chat_bubble_outline),
+                    label: Text('Chat'),
+                  ),
+                ),
               ),
-              FlatButton.icon(
-                color: Colors.teal,
-                onPressed: () {},
-                icon: Icon(Icons.mail_outline),
-                label: Text('SMS'),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: FlatButton.icon(
+                    height: 60,
+                    color: Colors.teal,
+                    onPressed: () {},
+                    icon: Icon(Icons.mail_outline),
+                    label: Text('SMS'),
+                  ),
+                ),
               ),
-              FlatButton.icon(
-                color: Colors.teal,
-                onPressed: () {},
-                icon: Icon(Icons.call),
-                label: Text('Call'),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: FlatButton.icon(
+                    height: 60,
+                    color: Colors.teal,
+                    onPressed: () {},
+                    icon: Icon(Icons.call),
+                    label: Text('Call'),
+                  ),
+                ),
               ),
             ],
           ),
@@ -300,3 +328,14 @@ class AdDetails extends StatelessWidget {
     );
   }
 }
+
+// class CachedGoogleMapProvider extends MapProvider {
+//   const CachedGoogleMapProvider();
+
+//   @override
+//   ImageProvider getTile(int x, int y, int z) {
+//     //Can also use CachedNetworkImageProvider.
+//     return NetworkImage(
+//         'https://www.google.com/maps/vt/pb=!1m4!1m3!1i$z!2i$x!3i$y!2m3!1e0!2sm!3i420120488!3m7!2sen!5e1105!12m4!1e68!2m2!1sset!2sRoadmap!4e0!5m1!1e0!23i4111425');
+//   }
+// }

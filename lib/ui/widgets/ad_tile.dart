@@ -46,6 +46,7 @@ class AdTile extends StatelessWidget {
                       children: [
                         Image.network(ad.images[0]),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             ColoredBox(
@@ -93,7 +94,7 @@ class AdTile extends StatelessWidget {
                         Icon(Icons.location_on, size: 14),
                         Expanded(
                           child: Text(
-                            ad.timeStamp.toString(),
+                            ad.postedAt.toString(),
                             maxLines: 1,
                           ),
                         ),

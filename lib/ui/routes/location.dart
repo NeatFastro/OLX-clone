@@ -29,6 +29,8 @@ class _LocationState extends State<Location> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   onChanged: (input) {
+                        // print('auto complete is running');
+
                     locationState.autoCompleteSearch(input);
                   },
                   decoration: InputDecoration(

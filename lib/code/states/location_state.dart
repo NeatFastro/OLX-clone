@@ -102,6 +102,8 @@ class LocationState extends ChangeNotifier {
   }
 
   autoCompleteSearch(String query) async {
+    print('auto complete is running');
+
     // if (query.length > 2) {
     var uri = Uri(
       scheme: 'https',
@@ -115,10 +117,12 @@ class LocationState extends ChangeNotifier {
         'key': googlePlaycesApiKey,
       },
     );
+    print('uri is $uri');
     http.Response response = await http.get(uri);
     List jsons = jsonDecode(response.body)['predictions'];
     searchSuggestions.clear();
     searchSuggestions.addAll(jsons);
+    print('fresh suggestions are: $jsons');
     notifyListeners();
     // } else {
     if (query.isEmpty) {

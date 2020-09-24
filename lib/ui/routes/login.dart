@@ -194,11 +194,14 @@ class _SignInState extends State<SignIn> {
                   child: PinInputTextField(
                     pinLength: 4,
                     decoration: BoxLooseDecoration(
-                        hintText: '----',
-                        strokeColor: Colors.black,
-                        enteredColor: Colors.teal[700],
-                        radius: Radius.zero,
-                        gapSpace: 10),
+                      hintText: '----',
+                      // strokeColor: Colors.black,
+                      // enteredColor: Colors.teal[700],
+                      radius: Radius.zero,
+                      gapSpace: 10,
+                      strokeColorBuilder:
+                          PinListenColorBuilder(Colors.cyan, Colors.green),
+                    ),
                     onSubmit: (pin) {
                       print('submitted pin is $pin');
                     },

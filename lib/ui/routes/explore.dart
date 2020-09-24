@@ -131,7 +131,8 @@ class _ExploreState extends State<Explore> {
         ),
         SliverGrid(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: kIsWeb ? 3 : 2,
+            // crossAxisCount: kIsWeb ? 4 : 2,
+            crossAxisCount: 2,
           ),
           delegate: SliverChildBuilderDelegate(
             (context, index) {

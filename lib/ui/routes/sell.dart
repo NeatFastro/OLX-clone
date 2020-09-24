@@ -8,7 +8,9 @@ import 'package:olx_clone/code/models/userDocument.dart';
 import 'package:olx_clone/code/services/data_store.dart';
 import 'package:olx_clone/code/states/location_state.dart';
 import 'package:olx_clone/code/utils.dart';
+import 'package:olx_clone/ui/routes/ad_details.dart';
 import 'package:olx_clone/ui/routes/authenticationFlow.dart';
+import 'package:olx_clone/ui/routes/congrats.dart';
 import 'package:olx_clone/ui/routes/location.dart';
 import 'package:olx_clone/ui/routes/profile.dart';
 import 'package:olx_clone/ui/widgets/categories_list.dart';
@@ -23,11 +25,21 @@ import 'package:olx_clone/ui/widgets/user_account_tile.dart';
 // 5) delete every copied image from temporary directory
 
 class Sell extends StatelessWidget {
+  List<Widget> steps = [
+    FormPage(),
+    ImagesPickerPage(),
+    SetPrice(),
+    ConfirmYourLocationPage(),
+    Location(title: 'Confirm your location'),
+    ReviewAdDetailsPage(),
+    // AdDetails(ad: sellState.ad),
+  ];
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, watch, child) {
         final sellState = watch(sellStateProvider);
+        // final ad = sellState.ad;
 
         return Scaffold(
           body: PageView(
@@ -40,9 +52,25 @@ class Sell extends StatelessWidget {
               ConfirmYourLocationPage(),
               Location(title: 'Confirm your location'),
               ReviewAdDetailsPage(),
-              // add ad review widget
+              // AdDetails(ad: sellState.ad),
             ],
           ),
+          // body: PageView.builder(
+          //     controller: sellState.pagesController,
+          //     itemCount: steps.length + 1,
+          //     itemBuilder: (context, index) {
+          //       if (index == steps.length) {
+          //         print('index become higher');
+          //         // return ColoredBox(
+          //         //   color: Colors.blue,
+          //         // );
+          //         return AdDetails(
+          //           ad: sellState.ad,
+          //         );
+          //       }
+          //       print('current $index ');
+          //       return steps[index];
+          //     }),
           bottomNavigationBar: Material(
             elevation: 100,
             child: MaterialButton(
@@ -69,9 +97,9 @@ class Sell extends StatelessWidget {
                       .collection('ads')
                       .doc()
                       .set(sellState.ad?.toDocument());
+                  print('going to congrats page');
+                  goto(context, Congrats());
                 }
-
-
               },
               color: Colors.teal[900],
               minWidth: double.infinity,

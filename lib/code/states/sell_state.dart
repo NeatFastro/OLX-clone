@@ -13,7 +13,7 @@ class SellState extends ChangeNotifier {
     setMakers();
   }
 
-  Ad ad;
+  Ad _ad;
 
   PageController pagesController = PageController();
   List<String> pages = ['form', 'uploadPicstures', 'setPrice', 'setLocation'];
@@ -47,19 +47,21 @@ class SellState extends ChangeNotifier {
     }
     User user = auth.currentUser;
 
-    ad = Ad(
-      adId: Uuid().v4(),
+    _ad = Ad(
+      adId: Uuid().v1(),
       maker: this.selectedMaker,
       title: adTitle,
       description: description,
       price: price,
       condition: selectedCondition,
       images: downloadUrls,
-      timeStamp: DateTime.now().toIso8601String(),
+      postedAt: DateTime.now().toIso8601String(),
       postedBy: user.uid,
       adUploadLocation: LocationState().currentGeoPoint,
     );
   }
+
+  Ad get ad => _ad;
 
   setMakers() {
     firestore

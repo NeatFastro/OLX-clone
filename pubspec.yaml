@@ -1,5 +1,5 @@
 name: olx_clone
-description: A new Flutter project.
+description: A Flutter project to experiment with.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -33,7 +33,7 @@ dependencies:
   # firebase_performance:
   firebase_messaging:
   firebase_storage:
-  cloud_firestore:
+  cloud_firestore: 0.14.0
   # end of flutter fire
   google_sign_in:
   google_fonts:
@@ -49,9 +49,8 @@ dependencies:
   path_provider:
   url_launcher:
   time_ago_provider:
-
-
-
+  # map:
+  # latlng:
 
 
 
@@ -66,9 +65,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  # build_runner: 
+  build_runner: 
   # json_serializable: 
-  # flutter_launcher_icons:
+  flutter_launcher_icons: "^0.8.0"
+
+flutter_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon/olx_app_icon.png"
 
 
 # For information on the generic Dart part of this file, see the
