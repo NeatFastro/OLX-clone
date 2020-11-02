@@ -50,6 +50,7 @@ class UserDocument {
 
   factory UserDocument.fromDocument(DocumentSnapshot document) {
     final Map<String, dynamic> data = document.data();
+    // TODA: must review this code
     if (data == null) {
       return UserDocument(name: 'Name', displayName: 'display name');
     }

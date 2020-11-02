@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
+import 'package:olx_clone/code/models/userDocument.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/chat_room.dart';
 import 'package:olx_clone/code/services/data_store.dart';
@@ -35,9 +36,19 @@ class ChatsList extends StatelessWidget {
             for (QueryDocumentSnapshot chat in snapshot.data.docs)
               ListTile(
                 // title: Text('OLX User'),
-                title: Text(chat.data()['correspondingAd']),
-                // subtitle: Text('crresponding ad title'),
-                subtitle: Text(chat.data()['correspondingAdTitle' ?? 'title']),
+                // title: Text(chat.data()['correspondingAd']),
+                // title: Text(chat.data()['between'][0]),
+                title: FutureBuilder<UserDocument>(
+                  future: repo.getUser(chat.data()['between'][0]),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData)
+                      return CircularProgressIndicator();
+                    else
+                      return Text(snapshot.data.name);
+                  },
+                ),
+
+                subtitle: Text(chat.data()['correspondingAdTitle']),
                 trailing:
                     IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
                 onTap: () async {

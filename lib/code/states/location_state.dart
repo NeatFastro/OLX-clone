@@ -113,7 +113,7 @@ class LocationState extends ChangeNotifier {
         'input': query,
         'types': 'geocode',
         'components': 'country:PK',
-        'sessiontoken': Uuid().v4(),
+        'sessiontoken': Uuid().v4(),    
         'key': googlePlaycesApiKey,
       },
     );

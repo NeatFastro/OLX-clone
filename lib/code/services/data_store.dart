@@ -22,9 +22,6 @@ class DataStore {
         .limit(5)
         .get();
 
-    print('related cats are');
-    print(querySnapshot.docs);
-
     return querySnapshot.docs.map((doc) => Ad.fromDocument(doc)).toList();
   }
 

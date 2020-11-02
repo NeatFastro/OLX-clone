@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 // import 'package:latlng/latlng.dart';
 // import 'package:map/map.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
@@ -16,6 +17,7 @@ import 'package:olx_clone/ui/widgets/ad_tile.dart';
 import 'package:olx_clone/ui/widgets/carousel.dart';
 import 'package:olx_clone/ui/widgets/favorite_button_simple.dart';
 import 'package:time_ago_provider/time_ago_provider.dart' as timeAgo;
+import 'package:url_launcher/url_launcher.dart';
 
 class AdDetails extends StatelessWidget {
 // final postDate=  DateTime.now().subtract();
@@ -64,16 +66,34 @@ class AdDetails extends StatelessWidget {
               ad.title,
               style: TextStyle(fontSize: 20),
             ),
-            Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(Icons.location_on),
-                // Text('location from where the ad was posted'),
-                Text(ad.adUploadLocation.toString()),
-                Spacer(),
-                // Text('2 days ago'),
-                Text(timeAgo.format(postDate, locale: 'en_short')),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(Icons.location_on),
+                  // Text('location from where the ad was posted'),
+                  // Text(ad.adUploadLocation.toString()),
+                  FutureBuilder<List<Address>>(
+                    future: Geocoder.local.findAddressesFromCoordinates(
+                      Coordinates(
+                        ad.adUploadLocation.latitude,
+                        ad.adUploadLocation.longitude,
+                      ),
+                    ),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData)
+                        return CircularProgressIndicator();
+                      else
+                        // return Text(snapshot.data[0].subLocality ?? 'Not Available');
+                        return Text(snapshot.data[0].locality ?? 'Not Available');
+                    },
+                  ),
+                  Spacer(),
+                  // Text('2 days ago'),
+                  Text(timeAgo.format(postDate, locale: 'en')),
+                ],
+              ),
             ),
             Divider(),
             Text(
@@ -151,7 +171,7 @@ class AdDetails extends StatelessWidget {
               //   controller: mapController,
               //   provider: CachedGoogleMapProvider(),
               // ),
-              child:Placeholder(),
+              child: Placeholder(),
             ),
             Divider(),
             Row(
@@ -255,6 +275,9 @@ class AdDetails extends StatelessWidget {
                             firestore.collection('chats').add(
                               {
                                 'between': [auth.currentUser.uid, ad.postedBy],
+                                // 'between': {
+
+                                // },
                                 'correspondingAd': ad.adId,
                                 'correspondingAdTitle': ad.title,
                                 'messages': [
@@ -315,7 +338,9 @@ class AdDetails extends StatelessWidget {
                   child: FlatButton.icon(
                     height: 60,
                     color: Colors.teal,
-                    onPressed: () {},
+                    onPressed: () {
+                      // launch();
+                    },
                     icon: Icon(Icons.call),
                     label: Text('Call'),
                   ),

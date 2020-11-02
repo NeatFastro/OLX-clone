@@ -4,6 +4,7 @@ class MyBottomNavigationBar extends StatelessWidget {
   final List<MyBottomNavigationBarItem> items;
 
   final ValueChanged<int> onTap;
+  
   final int currentIndex;
 
   // animation login

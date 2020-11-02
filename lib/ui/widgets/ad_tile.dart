@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:olx_clone/code/models/ad.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/ad_details.dart';
@@ -93,9 +94,33 @@ class AdTile extends StatelessWidget {
                       children: [
                         Icon(Icons.location_on, size: 14),
                         Expanded(
-                          child: Text(
-                            ad.postedAt.toString(),
-                            maxLines: 1,
+                          // child: Text(
+                          //   // ad.postedAt.toString(),
+                          //   // ad.adUploadLocation,
+                          //   Geocoder.local
+                          //       .findAddressesFromCoordinates(Coordinates(
+                          //           ad.adUploadLocation.latitude,
+                          //           ad.adUploadLocation.longitude))
+                          //       .then((addresss) {
+                          //     return addresss[0].subAdminArea;
+                          //   }).toString(),
+                          //   maxLines: 1,
+                          // ),
+                          child: FutureBuilder<List<Address>>(
+                            future: Geocoder.local.findAddressesFromCoordinates(
+                              Coordinates(
+                                ad.adUploadLocation.latitude,
+                                ad.adUploadLocation.longitude,
+                              ),
+                            ),
+                            builder: (context,
+                                 snapshot) {
+                              if (!snapshot.hasData)
+                                return CircularProgressIndicator();
+                                else
+                                // return Text(snapshot.data[0].subLocality ?? 'Not Available');
+                                return Text(snapshot.data[0].locality ?? 'Not Available');
+                            },
                           ),
                         ),
                       ],
