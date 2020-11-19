@@ -1,12 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:olx_clone/code/models/userDocument.dart';
+import 'package:olx_clone/code/utils.dart';
+import 'package:olx_clone/ui/routes/root.dart';
 
 class Auth {
   final GoogleSignIn googleAuth = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final BuildContext context;
+
+  Auth(this.context);
 
   // signInWithEmailAndGeneratedPin(String email, String password) async {
   //   try {
@@ -32,16 +39,50 @@ class Auth {
   //   }
   // }
 
-  signInWithEmailAndPassword(String email, String password) async {
-    print('signing with email');
+  signInWithEmailAndPassword({String email, String password}) async {
+    print('Creating User With Email');
     try {
-      print('in the try block');
-      await _auth.createUserWithEmailAndPassword(
+      print('Try block');
+      var userCredential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+
+      await updateUserData(userCredential.user);
+      goto(context, Root());
     } on FirebaseAuthException catch (e) {
-      print(e);
-    } finally {
-      print('i am finally block for sign in method');
+      print('Catch Block');
+      if (e.code == 'email-already-in-use') {
+        print('User already exists so signin in');
+
+        try {
+          UserCredential credential = await _auth.signInWithEmailAndPassword(
+              email: email, password: password);
+
+          await updateUserData(credential.user);
+          goto(context, Root());
+        } on FirebaseException catch (e) {
+          print('Catch Block for Sign in');
+
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text(e.code),
+                content: Text(e.message),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () => pop(context),
+                    child: Text('Retry'),
+                  )
+                ],
+              );
+            },
+          );
+
+          // print(e);
+        }
+      } else if (e.code == 'weak') {}
+      print(e.code);
+      print(e.message);
     }
   }
 
@@ -70,7 +111,9 @@ class Auth {
     }
   }
 
-  updateUserData(User user) async {
+  Future<void> updateUserData(User user) async {
+    print('updating user data');
+
     if (user != null) {
       if (await (_db
           .collection('users')
@@ -91,7 +134,7 @@ class Auth {
           // memberSince: Timestamp.fromDate(user.metadata.creationTime),
           deletedAccount: false,
         );
-        userDocRef.set(
+        await userDocRef.set(
           userDoc.toDocument(),
           SetOptions(merge: true),
         );

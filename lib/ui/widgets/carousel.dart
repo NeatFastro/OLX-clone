@@ -62,19 +62,21 @@ class _CarouselState extends State<Carousel> {
             bottom: 5,
             right: 0,
             left: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                for (int count = 0; count < widget.ad.images.length; count++)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 10,
-                      height: 10,
-                      color: count == currentPage ? Colors.black : Colors.red,
+            child: SingleChildScrollView(
+                          child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (int count = 0; count < widget.ad.images.length; count++)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        color: count == currentPage ? Colors.black : Colors.red,
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
           Positioned(

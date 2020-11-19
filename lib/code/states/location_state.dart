@@ -19,42 +19,103 @@ class LocationState extends ChangeNotifier {
   bool loading = false;
   Location location = Location();
   GeoPoint _currentGeoPoint;
+
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+  // LocationData _locationData;
+
   // var suggestions;
   // GeoPoint adUploadLocation = GeoPoint
 
   get currentGeoPoint => _currentGeoPoint ?? GeoPoint(30.3753, 69.3451);
 
   Future<void> getCurrentLocation() async {
-    if (await location.serviceEnabled()) {
-      location.getLocation().then((data) async {
-        final coordinates = Coordinates(data.latitude, data.longitude);
-        _currentGeoPoint = GeoPoint(data.latitude, data.longitude);
+    // if (await location.serviceEnabled()) {
+    //   location.getLocation().then((data) async {
+    //     final coordinates = Coordinates(data.latitude, data.longitude);
+    //     _currentGeoPoint = GeoPoint(data.latitude, data.longitude);
 
-        geoCoder.Geocoder.local
-            .findAddressesFromCoordinates(coordinates)
-            .then((addresses) {
-          currentAddress = addresses[0];
+    //     geoCoder.Geocoder.local
+    //         .findAddressesFromCoordinates(coordinates)
+    //         .then((addresses) {
+    //       currentAddress = addresses[0];
 
-          if (!recentlyUsedAddresses.contains(currentAddress)) {
-            recentlyUsedAddresses.add(currentAddress);
-          }
-          notifyListeners();
-        });
-      });
-      return;
-    } else {
-      await location.requestService();
-      // if (await location.serviceEnabled()) {
-      getCurrentLocation();
-      int counter = 0;
-      print('recursion kicked in ${counter++}');
-      notifyListeners();
-      // }
+    //       if (!recentlyUsedAddresses.contains(currentAddress)) {
+    //         recentlyUsedAddresses.add(currentAddress);
+    //       }
+    //       notifyListeners();
+    //     });
+    //   });
+    //   return;
+    // } else {
+    //   await location.requestService();
+    //   // if (await location.serviceEnabled()) {
+    //   getCurrentLocation();
+    //   int counter = 0;
+    //   print('recursion kicked in ${counter++}');
+    //   notifyListeners();
+    //   // }
+    // }
+
+    _serviceEnabled = await location.serviceEnabled();
+
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+
+      if (!_serviceEnabled) {
+        return;
+      }
     }
+
+    _permissionGranted = await location.hasPermission();
+
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    // _locationData = await location.getLocation();
+
+    // if (await location.serviceEnabled()) {
+    location.getLocation().then((data) async {
+      final coordinates = Coordinates(data.latitude, data.longitude);
+      _currentGeoPoint = GeoPoint(data.latitude, data.longitude);
+
+      geoCoder.Geocoder.local
+          .findAddressesFromCoordinates(coordinates)
+          .then((addresses) {
+        currentAddress = addresses[0];
+
+        if (!recentlyUsedAddresses.contains(currentAddress)) {
+          recentlyUsedAddresses.add(currentAddress);
+        }
+        notifyListeners();
+      });
+    });
+    // return;
+    // } else {
+    // await location.requestService();
+    // getCurrentLocation();
+    // int counter = 0;
+    // print('recursion kicked in ${counter++}');
+    // notifyListeners();
+    // }
   }
 
-  setCurrentAddress2(Address address) {
+  setCurrentAddress2(Address address) async {
     currentAddress = address;
+
+    // geoCoder.Geocoder.local.
+
+    if (await location.hasPermission() == PermissionStatus.granted &&
+        await location.serviceEnabled()) {
+      location.getLocation().then((value) =>
+          _currentGeoPoint = GeoPoint(value.latitude, value.longitude));
+    }
+
     notifyListeners();
   }
 
@@ -113,7 +174,7 @@ class LocationState extends ChangeNotifier {
         'input': query,
         'types': 'geocode',
         'components': 'country:PK',
-        'sessiontoken': Uuid().v4(),    
+        'sessiontoken': Uuid().v4(),
         'key': googlePlaycesApiKey,
       },
     );

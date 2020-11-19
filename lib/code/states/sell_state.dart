@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
@@ -9,13 +12,16 @@ import 'package:olx_clone/code/states/location_state.dart';
 import 'package:uuid/uuid.dart';
 
 class SellState extends ChangeNotifier {
+  bool canUpload = false;
+
   SellState() {
     setMakers();
   }
 
   Ad _ad;
 
-  PageController pagesController = PageController();
+  // PageController pagesController = PageController();
+  PageController pagesController;
   List<String> pages = ['form', 'uploadPicstures', 'setPrice', 'setLocation'];
   List<String> makers = ['sony, samsung, apple, lg, google'];
   List conditions = ['New', 'used'];
@@ -43,22 +49,35 @@ class SellState extends ChangeNotifier {
 
   Future<void> setAd(images) async {
     if (this.images.isNotEmpty) {
-      storeImagesInTempDir(images);
-    }
-    User user = auth.currentUser;
+      storeImagesInTempDir(images).then((value) {
+        User user = auth.currentUser;
 
-    _ad = Ad(
-      adId: Uuid().v1(),
-      maker: this.selectedMaker,
-      title: adTitle,
-      description: description,
-      price: price,
-      condition: selectedCondition,
-      images: downloadUrls,
-      postedAt: DateTime.now().toIso8601String(),
-      postedBy: user.uid,
-      adUploadLocation: LocationState().currentGeoPoint,
-    );
+        _ad = Ad(
+          adId: Uuid().v1(),
+          maker: this.selectedMaker,
+          title: adTitle,
+          description: description,
+          price: price,
+          condition: selectedCondition,
+          images: downloadUrls,
+          postedAt: DateTime.now().toIso8601String(),
+          postedBy: user.uid,
+          adUploadLocation: LocationState().currentGeoPoint,
+        );
+
+        pagesController.dispose();
+
+        adTitle = '';
+        description = '';
+        price = '';
+        selectedCondition = '';
+        downloadUrls.clear();
+
+        canUpload = true;
+      });
+    } else {
+      print('no image is selected');
+    }
   }
 
   Ad get ad => _ad;
@@ -98,63 +117,67 @@ class SellState extends ChangeNotifier {
       print(e);
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    // if (!mounted) return;
-
     images = resultList;
 
     notifyListeners();
   }
 
-  uploadImageToStorage(String imageName, File imagefile, User user) {
+  Future<void> uploadImageToStorage(
+      String imageName, File imagefile, User user) async {
     // StorageMetaData metaData = StorageMetaData();
-    storage
+
+    TaskSnapshot uploadedImage = await FirebaseStorage.instance
         .ref()
         .child('images')
-        .child(user.displayName)
-        .child('ads')
-        // make seperate folder for each ad images based on ad tiltle
+        .child(auth.currentUser.displayName + ' (${auth.currentUser.email})')
         .child(imageName)
-        .putFile(imagefile)
-        .onComplete
-        .then((snapshot) {
-      snapshot.ref.getDownloadURL().then((url) {
-        url.toString();
-        downloadUrls.add(url);
-      });
+        .putFile(imagefile);
+    // .onComplete;
+
+    String uploadedImageUrl = await uploadedImage.ref.getDownloadURL();
+
+    print('image url is $uploadedImageUrl');
+
+    downloadUrls.add(uploadedImageUrl.toString());
+  }
+
+  // Timer.periodic(Duration(seconds: 1), (timer) { });
+
+  printUrl() {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      print(downloadUrls);
     });
   }
 
-  storeImagesInTempDir(List<Asset> images) async {
+  Future<void> storeImagesInTempDir(List<Asset> images) async {
     final Directory tempDir = Directory.systemTemp;
     // final FirebaseUser user = await auth.currentUser();
 
     print('temp dir is : ${tempDir.path}');
 
-    images.forEach((image) {
-      image.getByteData().then((bytes) {
-        File('${tempDir.path}/${DateTime.now()}.png')
-            .writeAsBytes(
-          bytes.buffer.asUint8List(),
-          mode: FileMode.write,
-        )
-            .then((imageFile) {
-          String imageFileName;
-          imageFileName =
-              '${auth.currentUser.displayName} | ${auth.currentUser.email} ${DateTime.now()}.jpg';
+    images.forEach((image) async {
+      ByteData imageByteData = await image.getByteData();
 
-          uploadImageToStorage(imageFileName, imageFile, auth.currentUser);
-          // auth.currentUser().then((user) async {
-          //   imageFileName =
-          //       '${user.displayName} | ${user.email} ${DateTime.now()}.jpg';
-          //   print('image file is $imageFile');
-          //   // await imageFile.delete();
-          //   // print('deleted the image file');
-          // });
-        });
-      });
+      var imageFile =
+          await File('${tempDir.path}/${DateTime.now()}.png').writeAsBytes(
+        imageByteData.buffer.asUint8List(),
+        mode: FileMode.write,
+      );
+
+      String imageFileName;
+      imageFileName =
+          '${auth.currentUser.displayName} | ${auth.currentUser.email} ${DateTime.now()}.jpg';
+
+      await uploadImageToStorage(imageFileName, imageFile, auth.currentUser);
+      // auth.currentUser().then((user) async {
+      //   imageFileName =
+      //       '${user.displayName} | ${user.email} ${DateTime.now()}.jpg';
+      //   print('image file is $imageFile');
+      await imageFile.delete();
+      //   // print('deleted the image file');
+      // });
+      // });
+      // });
     });
   }
 }

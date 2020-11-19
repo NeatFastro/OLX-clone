@@ -11,7 +11,7 @@ class DataStore {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<List<Ad>> getAds() async {
-    QuerySnapshot documents = await _db.collection('ads').get();
+    QuerySnapshot documents = await _db.collection('ads').orderBy('postedAt').get();
     return documents.docs.map((doc) => Ad.fromDocument(doc)).toList();
   }
 
@@ -88,6 +88,8 @@ class DataStore {
       }
     }
     print('this. will execute after the loop');
+    return favouriteAds;
+
   }
 
   Future<List<Ad>> getUserAds(String id) async {

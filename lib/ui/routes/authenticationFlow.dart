@@ -5,6 +5,7 @@ import 'package:olx_clone/code/ambience/objs.dart';
 import 'package:olx_clone/code/models/userDocument.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/login.dart';
+import 'package:olx_clone/ui/routes/my_sign_in.dart';
 import 'package:typicons_flutter/typicons_flutter.dart';
 
 class AuthenticationFow extends StatelessWidget {
@@ -67,7 +68,8 @@ class AuthenticationFow extends StatelessWidget {
                 ),
               ),
               Text(
-                'PAKISTAN',
+                // 'PAKISTAN',
+                'CLONE',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
@@ -93,7 +95,7 @@ class AuthenticationFow extends StatelessWidget {
                         icon: Typicons.social_google_plus,
                         label: 'Continue with Google',
                         onPress: () async {
-                          final myAuth = Auth();
+                          final myAuth = Auth(context);
                           User user = await myAuth.googleSignIn();
 
                           if (user != null) {
@@ -102,8 +104,8 @@ class AuthenticationFow extends StatelessWidget {
                               name: user.displayName,
                               displayName: user.displayName,
                               photoUrl: user.photoURL,
-                              memberSince: user.metadata.creationTime
-                                  .millisecondsSinceEpoch
+                              memberSince: user
+                                  .metadata.creationTime.millisecondsSinceEpoch
                                   .toString(),
                             );
                             firestore.collection('users').doc(user.uid).set(
@@ -122,7 +124,8 @@ class AuthenticationFow extends StatelessWidget {
                         label: 'Continue with Email',
                         onPress: () {
                           // auth.signInWithEmailAndPassword(email, password);
-                          goto(context, SignIn());
+                          // goto(context, SignIn());
+                          goto(context, MySignIn());
                         },
                       ),
                       SizedBox(height: 10),

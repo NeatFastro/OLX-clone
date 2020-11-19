@@ -8,7 +8,7 @@ final FirebaseFirestore firestore = FirebaseFirestore.instance;
 final FirebaseAuth auth = FirebaseAuth.instance;
 
 final FirebaseStorage storage =
-    FirebaseStorage(storageBucket: 'gs://olx-clone-796b9.appspot.com');
+    // FirebaseStorage(storageBucket: 'gs://olx-clone-796b9.appspot.com');
+    FirebaseStorage.instance;
 
-       final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
-
+final FirebaseMessaging firebaseMessaging = FirebaseMessaging();

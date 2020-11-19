@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:olx_clone/code/ambience/providers.dart';
 import 'package:olx_clone/code/ambience/vars.dart';
 import 'package:olx_clone/code/states/sell_state.dart';
+import 'package:olx_clone/code/utils.dart';
+import 'package:olx_clone/ui/routes/root.dart';
 import 'package:olx_clone/ui/widgets/carousel.dart';
 
 class AdPreview extends StatelessWidget {
@@ -28,7 +30,10 @@ class AdPreview extends StatelessWidget {
                     child: Row(
                       children: [
                         IconButton(
-                            icon: Icon(Icons.arrow_back), onPressed: () {}),
+                            icon: Icon(Icons.arrow_back),
+                            onPressed: () {
+                              goto(context, Root());
+                            }),
                         Spacer(),
                         IconButton(
                             icon: Icon(Icons.share_outlined), onPressed: () {}),

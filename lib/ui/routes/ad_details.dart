@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 // import 'package:latlng/latlng.dart';
 // import 'package:map/map.dart';
 import 'package:olx_clone/code/ambience/objs.dart';
@@ -17,7 +19,7 @@ import 'package:olx_clone/ui/widgets/ad_tile.dart';
 import 'package:olx_clone/ui/widgets/carousel.dart';
 import 'package:olx_clone/ui/widgets/favorite_button_simple.dart';
 import 'package:time_ago_provider/time_ago_provider.dart' as timeAgo;
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
 class AdDetails extends StatelessWidget {
 // final postDate=  DateTime.now().subtract();
@@ -27,11 +29,53 @@ class AdDetails extends StatelessWidget {
 
   final Ad ad;
   // UserDoc user;
+
+  AdDetails({Key key, this.ad}) : postDate = DateTime.parse(ad.postedAt) {
+    adPostLocation = {
+      Circle(
+        circleId: CircleId(ad.adId),
+        center: LatLng(
+          ad.adUploadLocation.latitude,
+          ad.adUploadLocation.longitude,
+        ),
+        radius: 500,
+        fillColor: Colors.blueAccent.withOpacity(.40),
+        strokeColor: Colors.blueAccent,
+        strokeWidth: 1,
+      ),
+    };
+  }
+
+//   @override
+//   _AdDetailsState createState() => _AdDetailsState();
+// }
+
+// class _AdDetailsState extends State<AdDetails> {
+//   GoogleMapController mapController;
+
+  Set<Circle> adPostLocation = {};
+
   final data = DataStore();
-  AdDetails({Key key, this.ad}) : postDate = DateTime.parse(ad.postedAt);
-  // mapController = MapController(
-  //     location: LatLng(
-  //         ad.adUploadLocation.latitude, ad.adUploadLocation.longitude));
+
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+
+  //   adPostLocation = {
+  //     Circle(
+  //       circleId: CircleId( ad.adId),
+  //       center: LatLng(
+  //          ad.adUploadLocation.latitude,
+  //          ad.adUploadLocation.longitude,
+  //       ),
+  //       radius: 500,
+  //       fillColor: Colors.blueAccent.withOpacity(.40),
+  //       strokeColor: Colors.blueAccent,
+  //       strokeWidth: 1,
+  //     ),
+  //   };
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -49,21 +93,21 @@ class AdDetails extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: ListView(
           children: [
-            Carousel(ad),
+            Carousel( ad),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Rs ' + ad.price,
+                  'Rs ' +  ad.price,
                   style: textStyle.copyWith(fontWeight: FontWeight.w600),
                 ),
                 FavouritesButtonSimple(
-                  ad: ad,
+                  ad:  ad,
                 ),
               ],
             ),
             Text(
-              ad.title,
+               ad.title,
               style: TextStyle(fontSize: 20),
             ),
             Padding(
@@ -77,8 +121,8 @@ class AdDetails extends StatelessWidget {
                   FutureBuilder<List<Address>>(
                     future: Geocoder.local.findAddressesFromCoordinates(
                       Coordinates(
-                        ad.adUploadLocation.latitude,
-                        ad.adUploadLocation.longitude,
+                         ad.adUploadLocation.latitude,
+                         ad.adUploadLocation.longitude,
                       ),
                     ),
                     builder: (context, snapshot) {
@@ -86,12 +130,13 @@ class AdDetails extends StatelessWidget {
                         return CircularProgressIndicator();
                       else
                         // return Text(snapshot.data[0].subLocality ?? 'Not Available');
-                        return Text(snapshot.data[0].locality ?? 'Not Available');
+                        return Text(
+                            snapshot.data[0].locality ?? 'Not Available');
                     },
                   ),
                   Spacer(),
                   // Text('2 days ago'),
-                  Text(timeAgo.format(postDate, locale: 'en')),
+                  Text(timeAgo.format( postDate, locale: 'en')),
                 ],
               ),
             ),
@@ -104,14 +149,14 @@ class AdDetails extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text('MAKER'),
-                Text(ad.maker),
+                Text( ad.maker),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text('CONDITION'),
-                Text(ad.condition),
+                Text( ad.condition),
               ],
             ),
             Divider(),
@@ -119,10 +164,11 @@ class AdDetails extends StatelessWidget {
               'Description',
               style: textStyle,
             ),
-            Text(ad.description),
+            Text( ad.description),
             Divider(),
             FutureBuilder(
-              future: firestore.collection('users').doc(ad.postedBy).get(),
+              future:
+                  firestore.collection('users').doc( ad.postedBy).get(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting ||
                     !snapshot.hasData) {
@@ -165,14 +211,64 @@ class AdDetails extends StatelessWidget {
               'Ad posted at',
               style: textStyle,
             ),
-            SizedBox(
-              height: 260,
-              // child: Map(
-              //   controller: mapController,
-              //   provider: CachedGoogleMapProvider(),
-              // ),
-              child: Placeholder(),
-            ),
+            if (kIsWeb)
+              SizedBox(
+                height: 260,
+                // child: Map(
+                //   controller: mapController,
+                //   provider: CachedGoogleMapProvider(),
+                // ),
+                child: Placeholder(),
+              )
+            else
+              // Text('not web'),
+              SizedBox(
+                height: 260,
+                child: GoogleMap(
+                  // liteModeEnabled: true,
+                  // mapType: MapType.hybrid,
+                  circles: adPostLocation,
+                  initialCameraPosition: CameraPosition(
+                    // target: LatLng(30.3753, 69.3451),
+                    target: LatLng(
+                       ad.adUploadLocation.latitude,
+                       ad.adUploadLocation.longitude,
+                    ),
+                    zoom: 14.5,
+                  ),
+                  onMapCreated: (controller) {
+                    print('map created');
+
+
+                    // setState(() {
+                    //   adPostLocation.add(
+                    //     Circle(
+                    //       circleId: CircleId( ad.adId),
+                    //       center: LatLng(
+                    //          ad.adUploadLocation.latitude,
+                    //          ad.adUploadLocation.longitude,
+                    //       ),
+                    //       radius: 500,
+                    //       fillColor: Colors.blueAccent.withOpacity(.40),
+                    //       strokeColor: Colors.blueAccent,
+                    //       strokeWidth: 1,
+                    //     ),
+                    //   );
+                    // });
+
+                    // controller.animateCamera(
+                    //   CameraUpdate.newCameraPosition(
+                    //     CameraPosition(
+                    //       // target: LatLng(value.latitude, value.longitude),
+                    //       target: LatLng( ad.adUploadLocation.latitude,
+                    //            ad.adUploadLocation.longitude),
+                    //       zoom: 14,
+                    //     ),
+                    //   ),
+                    // );
+                  },
+                ),
+              ),
             Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -202,7 +298,7 @@ class AdDetails extends StatelessWidget {
               style: textStyle,
             ),
             FutureBuilder<List<Ad>>(
-              future: data.getRelatedAds(ad),
+              future: data.getRelatedAds( ad),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: Text('loading...'));
@@ -247,7 +343,7 @@ class AdDetails extends StatelessWidget {
                           print('got detail for current user from firestore');
                           if (user.chats != null) {
                             for (dynamic map in user.chats) {
-                              if (map.containsValue(ad.adId)) {
+                              if (map.containsValue( ad.adId)) {
                                 print('condition evaluated to true');
                                 createNewChat = false;
                                 firestore
@@ -259,7 +355,7 @@ class AdDetails extends StatelessWidget {
                                   goto(
                                     context,
                                     ChatRoom(
-                                      ad: ad,
+                                      ad:  ad,
                                       chat: chat,
                                     ),
                                   );
@@ -274,12 +370,15 @@ class AdDetails extends StatelessWidget {
                             print('going to chat room ');
                             firestore.collection('chats').add(
                               {
-                                'between': [auth.currentUser.uid, ad.postedBy],
+                                'between': [
+                                  auth.currentUser.uid,
+                                   ad.postedBy
+                                ],
                                 // 'between': {
 
                                 // },
-                                'correspondingAd': ad.adId,
-                                'correspondingAdTitle': ad.title,
+                                'correspondingAd':  ad.adId,
+                                'correspondingAdTitle':  ad.title,
                                 'messages': [
                                   {
                                     'from': 'Olx',
@@ -297,7 +396,7 @@ class AdDetails extends StatelessWidget {
                                 'chats': FieldValue.arrayUnion([
                                   {
                                     'type': 'buying',
-                                    'ad': ad.adId,
+                                    'ad':  ad.adId,
                                     'chat': doc.id,
                                   }
                                 ]),
@@ -306,7 +405,7 @@ class AdDetails extends StatelessWidget {
                                 goto(
                                     context,
                                     ChatRoom(
-                                      ad: ad,
+                                      ad:  ad,
                                       chat: Chat.fromDocument(value),
                                     ));
                               });

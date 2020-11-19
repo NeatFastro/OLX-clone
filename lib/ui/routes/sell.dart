@@ -39,6 +39,8 @@ class Sell extends StatelessWidget {
     return Consumer(
       builder: (context, watch, child) {
         final sellState = watch(sellStateProvider);
+
+        sellState.pagesController = PageController();
         // final ad = sellState.ad;
 
         return Scaffold(
@@ -55,30 +57,10 @@ class Sell extends StatelessWidget {
               // AdDetails(ad: sellState.ad),
             ],
           ),
-          // body: PageView.builder(
-          //     controller: sellState.pagesController,
-          //     itemCount: steps.length + 1,
-          //     itemBuilder: (context, index) {
-          //       if (index == steps.length) {
-          //         print('index become higher');
-          //         // return ColoredBox(
-          //         //   color: Colors.blue,
-          //         // );
-          //         return AdDetails(
-          //           ad: sellState.ad,
-          //         );
-          //       }
-          //       print('current $index ');
-          //       return steps[index];
-          //     }),
           bottomNavigationBar: Material(
             elevation: 100,
             child: MaterialButton(
               onPressed: () {
-                print('current page ${sellState.pagesController.page}');
-                print('going to next page ' +
-                    sellState.pagesController.page.toString());
-
                 if (sellState.pagesController.page == 4.0) {
                   print('going to post ad');
                   if (auth.currentUser.isAnonymous) {
@@ -93,12 +75,16 @@ class Sell extends StatelessWidget {
                 } else {
                   sellState.setAd(sellState.images);
                   print('posting ad');
-                  firestore
-                      .collection('ads')
-                      .doc()
-                      .set(sellState.ad?.toDocument());
-                  print('going to congrats page');
-                  goto(context, Congrats());
+                  if (sellState.canUpload) {
+                    firestore
+                        .collection('ads')
+                        .doc()
+                        .set(sellState.ad?.toDocument());
+                    print('going to congrats page');
+                    goto(context, Congrats());
+                  } else {
+                    print('cant upload right now');
+                  }
                 }
               },
               color: Colors.teal[900],
@@ -169,15 +155,20 @@ class FormPage extends StatelessWidget {
                                           for (var maker in snapshot
                                               .data.docs[0]
                                               .data()['maker'])
-                                            MaterialButton(
-                                              onPressed: () {
-                                                state.selectedMaker = maker;
-                                                state.makerSelectorController
-                                                    .text = state.selectedMaker;
-                                                pop(context);
-                                                // state.ad.maker
-                                              },
-                                              child: Text(maker),
+                                            Align(
+                                              alignment: Alignment.center,
+                                              child: MaterialButton(
+                                                // minWidth: double.infinity,
+                                                onPressed: () {
+                                                  state.selectedMaker = maker;
+                                                  state.makerSelectorController
+                                                          .text =
+                                                      state.selectedMaker;
+                                                  pop(context);
+                                                  // state.ad.maker
+                                                },
+                                                child: Text(maker),
+                                              ),
                                             ),
                                         ],
                                       );

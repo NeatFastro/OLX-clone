@@ -53,7 +53,7 @@ class Settings extends StatelessWidget {
                         // color: Colors.blue,
                         onPressed: () {
                           // auth.signOut();
-                          Auth().signOut();
+                          Auth(context).signOut();
                           // pop(context);
                           Navigator.of(context).popUntil(
                               ModalRoute.withName(Navigator.defaultRouteName));
