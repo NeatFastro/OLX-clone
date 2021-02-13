@@ -51,6 +51,7 @@ dependencies:
   time_ago_provider:
   # map:
   # latlng:
+  google_maps_flutter:
 
 
 
