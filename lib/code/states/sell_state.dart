@@ -126,7 +126,7 @@ class SellState extends ChangeNotifier {
       String imageName, File imagefile, User user) async {
     // StorageMetaData metaData = StorageMetaData();
 
-    TaskSnapshot uploadedImage = await FirebaseStorage.instance
+    StorageUploadTask uploadedImage = await FirebaseStorage.instance
         .ref()
         .child('images')
         .child(auth.currentUser.displayName + ' (${auth.currentUser.email})')
@@ -134,7 +134,9 @@ class SellState extends ChangeNotifier {
         .putFile(imagefile);
     // .onComplete;
 
-    String uploadedImageUrl = await uploadedImage.ref.getDownloadURL();
+    // String uploadedImageUrl = await uploadedImage.ref.getDownloadURL();
+    StorageTaskSnapshot storageTaskSnapshot = await uploadedImage.onComplete;
+    var uploadedImageUrl = storageTaskSnapshot.ref.getDownloadURL();
 
     print('image url is $uploadedImageUrl');
 

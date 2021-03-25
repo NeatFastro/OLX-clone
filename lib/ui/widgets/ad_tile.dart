@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:olx_clone/code/ambience/api_keys.dart';
 import 'package:olx_clone/code/models/ad.dart';
 import 'package:olx_clone/code/utils.dart';
 import 'package:olx_clone/ui/routes/ad_details.dart';
@@ -107,19 +108,28 @@ class AdTile extends StatelessWidget {
                           //   maxLines: 1,
                           // ),
                           child: FutureBuilder<List<Address>>(
-                            future: Geocoder.local.findAddressesFromCoordinates(
+                            future: Geocoder.google(googlePlaycesApiKey)
+                                .findAddressesFromCoordinates(
                               Coordinates(
                                 ad.adUploadLocation.latitude,
                                 ad.adUploadLocation.longitude,
                               ),
                             ),
-                            builder: (context,
-                                 snapshot) {
-                              if (!snapshot.hasData)
-                                return CircularProgressIndicator();
-                                else
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData ||
+                                  snapshot.data == null ||
+                                  snapshot.data.isEmpty)
+                                return Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    // child: LinearProgressIndicator(),
+                                    child: Text('Loading address...'),
+                                  ),
+                                );
+                              else
                                 // return Text(snapshot.data[0].subLocality ?? 'Not Available');
-                                return Text(snapshot.data[0].locality ?? 'Not Available');
+                                return Text(snapshot.data[0].locality ??
+                                    'Not Available');
                             },
                           ),
                         ),
