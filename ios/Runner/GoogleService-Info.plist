@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>68202839062-2ljms99rpqb59rh6vtidnpqh5ufe0q30.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.68202839062-2ljms99rpqb59rh6vtidnpqh5ufe0q30</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>68202839062-f5hakmr4f59l0ule4lu1i9lo9vnkr34d.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDeElHPeCdpOvLsY6aJCecupFdngaIWCEk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>68202839062</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.olxclone.app</string>
+	<key>PROJECT_ID</key>
+	<string>olx-clone-796b9</string>
+	<key>STORAGE_BUCKET</key>
+	<string>olx-clone-796b9.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:68202839062:ios:431ed5c9e8a7b1b0cd8937</string>
+	<key>DATABASE_URL</key>
+	<string>https://olx-clone-796b9.firebaseio.com</string>
+</dict>
+</plist>
